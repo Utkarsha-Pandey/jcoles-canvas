@@ -15,6 +15,9 @@ export const useEditor = () => {
             initialCanvas: fabric.Canvas;
             initialContainer: HTMLDivElement;
         }) => {
+
+            initialContainer.style.height = "100vh";
+            initialContainer.style.width = "100vw";
             fabric.Object.prototype.set({
                 cornerColor: "#FFF",
                 cornerStyle: "circle",
@@ -37,8 +40,11 @@ export const useEditor = () => {
                     blur: 5,
                 }),
             });
+            
+            console.log(initialContainer.offsetHeight);
 
-            // Replaced setWidth and setHeight with setDimensions
+            // const heighKamHai = initialContainer.offsetHeight < 800 ? 1200 : initialContainer.offsetHeight;
+
             initialCanvas.setDimensions({
                 width: initialContainer.offsetWidth ,
                 height: initialContainer.offsetHeight ,
@@ -52,10 +58,11 @@ export const useEditor = () => {
             setContainer(initialContainer);
 
             const test = new fabric.Rect({
-                height: 100,
-                width: 100, 
+                height: 800,
+                width: 800, 
                 fill: "black",
             });
+            initialCanvas.add(test);
         },
         []
     );
