@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useEditor } from "../hooks/use-editor";
-import * as fabric from 'fabric';
+import  {fabric} from 'fabric';
 
 export const Editor = () => {
     const { init } = useEditor();
@@ -25,8 +25,8 @@ export const Editor = () => {
         });
     }, []);
     return (
-        <div className="h-full flex flex-col">
-            <div ref={containerRef} className="flex-1 h-full bg-black">
+        <div className="w-screen h-screen flex justify-center items-center overflow-hidden relative">
+            <div ref={containerRef} className="flex-1 h-full bg-black" >
                 <canvas ref={canvasRef} />
             </div>
         </div>
