@@ -28,6 +28,9 @@ export const Editor = () => {
             initialCanvas: canvas,
             initialContainer: containerRef.current!,
         });
+        return ()=>{
+            canvas.dispose();
+        }
     }, []);
     return (
         <div className="h-full flex flex-col">
