@@ -31,7 +31,7 @@ export const Editor = () => {
         return ()=>{
             canvas.dispose();
         }
-    }, []);
+    }, [init]);
     return (
         <div className="h-full flex flex-col">
             <Navbar/>
