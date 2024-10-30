@@ -10,12 +10,24 @@ import { Toolbar } from "./toolbar";
 import { Footer } from "./footer";
 import { ActiveTool } from "@/features/types";
 
-
 export const Editor = () => {
-    const [activeTool, setActiveTool]= useState<ActiveTool>("select");
-    const onChangeActiveTool = useCallback((tool: ActiveTool)=> {
-       
-    },[]);
+    const [activeTool, setActiveTool] = useState<ActiveTool>("select");
+    const onChangeActiveTool = useCallback(
+        (tool: ActiveTool) => {
+            if (tool === activeTool) {
+                return setActiveTool("select");
+            }
+            if (tool === "draw") {
+                //empty for now
+            }
+            if (activeTool === "draw") {
+                //empty
+            }
+
+            setActiveTool(tool);
+        },
+        [activeTool]
+    );
     const { init } = useEditor();
     const canvasRef = useRef(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -39,9 +51,15 @@ export const Editor = () => {
     }, [init]);
     return (
         <div className="h-full flex flex-col">
-            <Navbar />
+            <Navbar 
+                activeTool={activeTool}
+                onChangeActiveTool={onChangeActiveTool}
+            />
             <div className="absolute h-[calc(100%-68px)] w-full top-[68px] flex">
-                <Sidebar />
+                <Sidebar
+                    activeTool={activeTool}
+                    onChangeActiveTool={onChangeActiveTool}
+                />
                 <main className="bg-muted flex-1 overflow-hidden relative flex flex-col">
                     <Toolbar />
                     <div
