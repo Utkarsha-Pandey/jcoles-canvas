@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useEditor } from "../hooks/use-editor";
 import { fabric } from "fabric";
 
@@ -8,8 +8,14 @@ import { Navbar } from "./navbar";
 import { Sidebar } from "./sidebar";
 import { Toolbar } from "./toolbar";
 import { Footer } from "./footer";
+import { ActiveTool } from "@/features/types";
+
 
 export const Editor = () => {
+    const [activeTool, setActiveTool]= useState<ActiveTool>("select");
+    const onChangeActiveTool = useCallback((tool: ActiveTool)=> {
+       
+    },[]);
     const { init } = useEditor();
     const canvasRef = useRef(null);
     const containerRef = useRef<HTMLDivElement>(null);
