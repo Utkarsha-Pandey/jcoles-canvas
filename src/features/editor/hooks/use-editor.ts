@@ -1,7 +1,8 @@
 import { useCallback, useState, useMemo } from "react";
 import { fabric } from "fabric";
 import { useAutoResize } from "./use-auto-resize";
-import { BuildEditorProps, CIRCLE_OPTIONS, DIAMOND_OPTIONS, Editor, RECTANGLE_OPTIONS, TRIANGLE_OPTIONS } from "@/features/types";
+import { BuildEditorProps, CIRCLE_OPTIONS, DIAMOND_OPTIONS, Editor, FILL_COLOR, RECTANGLE_OPTIONS, TRIANGLE_OPTIONS } from "@/features/types";
+import { useCanvasEvents } from "./use-canvas-events";
 
 const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
     const getWorkspace = () => {
@@ -87,7 +88,13 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
 export const useEditor = () => {
     const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
+    const [selectedObjects, setSelectedObjects] = useState<fabric.Object [] >([]);
+    const [fillColor,setFillColor]=useState(FILL_COLOR);
     useAutoResize({ canvas, container });
+
+    useCanvasEvents({
+        canvas,container,setSelectedObjects
+    });
 
     const editor = useMemo(() => {
         if (canvas) {
