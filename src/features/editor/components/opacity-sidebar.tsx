@@ -1,3 +1,4 @@
+import { useEffect, useState, useMemo} from "react";
 import {
     ActiveTool,
     Editor,
@@ -22,7 +23,16 @@ export const OpacitySidebar = ({
     activeTool,
     onChangeActiveTool,
 }: OpacitySidebarProps) => {
-    const value = editor?.getActiveOpacity() || 1;
+    const initialValue = editor?.getActiveOpacity() || 1;
+    const selectedObject = useMemo(() => editor?.selectedObjects[0], [editor?.selectedObjects]);
+
+    const [opacity, setOpacity] = useState(initialValue);
+
+    useEffect(() => {
+        if (selectedObject){
+            setOpacity(selectedObject.get("opacity") || 1);
+        }   
+    }, [selectedObject]);
 
     const onClose = () => {
         onChangeActiveTool("select");
@@ -30,6 +40,7 @@ export const OpacitySidebar = ({
 
     const onChange = (value: number) => {
         editor?.changeOpacity(value);
+        setOpacity(value);
     };
 
     return (
@@ -47,7 +58,7 @@ export const OpacitySidebar = ({
                 <div className="p-4 space-y-4 border-b">
 
                     <Slider
-                        value={[value]}
+                        value={[opacity]}
                         onValueChange={(values) =>
                             onChange(values[0])
                         }
