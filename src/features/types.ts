@@ -85,6 +85,8 @@ export interface Editor {
     canvas:fabric.Canvas;
     selectedObjects: fabric.Object[];
     changeStrokeDashArray: (value: number[]) => void;
+    bringForward: () => void;
+    sendBackwards: () => void;
 }
 
 export const FILL_COLOR = "rgba(0,0,0,1)";
