@@ -3,6 +3,7 @@ import { ActiveTool, Editor } from "../../types";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {RxTransparencyGrid} from "react-icons/rx";
 import { BsBorderWidth } from "react-icons/bs";
 import { ArrowDown, ArrowUp } from "lucide-react";
 
@@ -98,13 +99,14 @@ export const Toolbar = ({
                 </Hint>
             </div>
             <div className="flex items-center h-full justify-center">
-                <Hint label="Send Backwards" side="bottom" sideOffset={5}>
+                <Hint label="Opacity" side="bottom" sideOffset={5}>
                     <Button
-                        onClick={() => editor?.sendBackwards()}
+                        onClick={() => onChangeActiveTool("opacity")}
                         size="icon"
                         variant="ghost"
+                        className={cn(activeTool === "opacity" && "bg-gray-100")}
                     >
-                        <ArrowDown className="size-4 "/>
+                        <RxTransparencyGrid className="size-4 "/>
                     </Button>
                 </Hint>
             </div>

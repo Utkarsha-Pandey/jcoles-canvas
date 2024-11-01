@@ -45,6 +45,23 @@ const buildEditor = ({
         canvas.setActiveObject(object);
     };
     return {
+        getActiveOpacity:()=>{
+                const selectedObject = selectedObjects[0];
+                if(!selectedObject){
+                    return 1;
+                }
+    
+                const value = selectedObject.get("opacity") || strokeColor;
+                
+                //since we r not using gradient and patterns
+                return value;
+            },
+        changeOpacity: (value: number)=>{
+            canvas.getActiveObjects().forEach((object)=>{
+                object.set({opacity :value});
+            })
+            canvas.renderAll();
+        },
         bringForward: () => {
             canvas.getActiveObjects().forEach((object) =>{
                 canvas.bringForward(object);
