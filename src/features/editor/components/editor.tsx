@@ -12,6 +12,7 @@ import { ActiveTool, selectionDependentTools } from "@/features/types";
 import { ShapeSidebar } from "./shape-sidebar";
 import { FillColorSidebar } from "./fill-color-sidebar";
 import { StrokeColorSidebar } from "./stroke-color-sidebar";
+import { StrokeWidthSidebar } from "./stroke-width-sidebar";
 
 export const Editor = () => {
     const [activeTool, setActiveTool] = useState<ActiveTool>("select");
@@ -84,6 +85,12 @@ export const Editor = () => {
                 />
 
                 <StrokeColorSidebar
+                    editor={editor}
+                    activeTool={activeTool}
+                    onChangeActiveTool={onChangeActiveTool}
+                />
+
+                <StrokeWidthSidebar
                     editor={editor}
                     activeTool={activeTool}
                     onChangeActiveTool={onChangeActiveTool}
