@@ -6,12 +6,13 @@ import {
     CIRCLE_OPTIONS,
     DIAMOND_OPTIONS,
     Editor,
+    EditorHookProps,
     FILL_COLOR,
     RECTANGLE_OPTIONS,
     STROKE_COLOR,
     STROKE_WIDTH,
     TRIANGLE_OPTIONS,
-} from "@/features/types"; 
+} from "@/features/types";
 import { useCanvasEvents } from "./use-canvas-events";
 import { isTextType } from "../utils";
 
@@ -19,10 +20,11 @@ const buildEditor = ({
     canvas,
     fillColor,
     setFillColor,
-    strokeColor, 
+    strokeColor,
     setStrokeColor,
     strokeWidth,
     setStrokeWidth,
+    selectedObjects,
 }: BuildEditorProps): Editor => {
     const getWorkspace = () => {
         return canvas.getObjects().find((object) => object.name === "clip");
@@ -43,31 +45,36 @@ const buildEditor = ({
         changeFillColor: (value: string) => {
             setFillColor(value);
             canvas.getActiveObjects().forEach((object) => {
-                object.set({fill : value});
-            })
+                object.set({ fill: value });
+            });
+            canvas.renderAll();
         },
         changeStrokeColor: (value: string) => {
             setStrokeColor(value);
             canvas.getActiveObjects().forEach((object) => {
                 //text types don't have stroke
-                if(isTextType(object.type)){
-                    object.set({fill : value});
+                if (isTextType(object.type)) {
+                    object.set({ fill: value });
                     return;
                 }
-                object.set({stroke : value});
-            })
-        }
+                object.set({ stroke: value });
+                canvas.renderAll();
+            });
+        },
 
-        ,
-        changeStrokeWidth: (value : number) => {
+        changeStrokeWidth: (value: number) => {
             setStrokeWidth(value);
             canvas.getActiveObjects().forEach((object) => {
-                object.set({strokeWidth : value})
+                object.set({ strokeWidth: value });
             });
+            canvas.renderAll();
         },
         addCircle: () => {
             const object = new fabric.Circle({
                 ...CIRCLE_OPTIONS,
+                fill: fillColor,
+                stroke: strokeColor,
+                strokeWidth: strokeWidth,
             });
 
             addToCanvas(object);
@@ -78,6 +85,9 @@ const buildEditor = ({
                 ...RECTANGLE_OPTIONS,
                 rx: 30,
                 ry: 30,
+                fill: fillColor,
+                stroke: strokeColor,
+                strokeWidth: strokeWidth,
             });
 
             addToCanvas(object);
@@ -85,6 +95,9 @@ const buildEditor = ({
         addRectangle: () => {
             const object = new fabric.Rect({
                 ...RECTANGLE_OPTIONS,
+                fill: fillColor,
+                stroke: strokeColor,
+                strokeWidth: strokeWidth,
             });
 
             addToCanvas(object);
@@ -92,6 +105,9 @@ const buildEditor = ({
         addTriangle: () => {
             const object = new fabric.Triangle({
                 ...TRIANGLE_OPTIONS,
+                fill: fillColor,
+                stroke: strokeColor,
+                strokeWidth: strokeWidth,
             });
 
             addToCanvas(object);
@@ -107,6 +123,9 @@ const buildEditor = ({
                 ],
                 {
                     ...TRIANGLE_OPTIONS,
+                    fill: fillColor,
+                    stroke: strokeColor,
+                    strokeWidth: strokeWidth,
                 }
             );
 
@@ -115,7 +134,7 @@ const buildEditor = ({
         addDiamond: () => {
             const HEIGHT = DIAMOND_OPTIONS.height;
             const WIDTH = DIAMOND_OPTIONS.width;
-            const object = new fabric.Polygon(
+            const object = new fabric.Polygon( 
                 [
                     { x: WIDTH / 2, y: 0 },
                     { x: WIDTH, y: HEIGHT / 2 },
@@ -125,20 +144,45 @@ const buildEditor = ({
                 ],
                 {
                     ...DIAMOND_OPTIONS,
+                    fill: fillColor,
+                    stroke: strokeColor,
+                    strokeWidth: strokeWidth,
                 }
             );
 
             addToCanvas(object);
         },
         canvas,
-        fillColor,
-        strokeColor,
-        strokeWidth,
-        
+        getActiveFillColor : () => {
+            const selectedObject = selectedObjects[0];
+            if(!selectedObject){
+                return fillColor;
+            }
 
+            const value = selectedObject.get("fill") || fillColor;
+            
+            //since we r not using gradient and patterns
+            return value as string;
+        },
+
+        getActiveStrokeColor : () => {
+            const selectedObject = selectedObjects[0];
+            if(!selectedObject){
+                return fillColor;
+            }
+
+            const value = selectedObject.get("stroke") || strokeColor;
+            
+            //since we r not using gradient and patterns
+            return value;
+        },
+        strokeWidth,
+        selectedObjects,
     };
 };
-export const useEditor = () => {
+export const useEditor = ({
+    clearSelectionCallback
+} : EditorHookProps) => {
     const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
     const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
@@ -152,6 +196,9 @@ export const useEditor = () => {
         canvas,
         container,
         setSelectedObjects,
+        clearSelectionCallback,
+
+
     });
 
     const editor = useMemo(() => {
@@ -164,11 +211,12 @@ export const useEditor = () => {
                 setStrokeColor,
                 strokeWidth,
                 setStrokeWidth,
+                selectedObjects,
             });
         }
 
         return undefined;
-    }, [canvas, fillColor, strokeColor, strokeWidth]);
+    }, [canvas, fillColor, strokeColor, strokeWidth, selectedObjects]);
     const init = useCallback(
         ({
             initialCanvas,

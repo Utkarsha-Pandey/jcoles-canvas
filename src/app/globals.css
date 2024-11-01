@@ -72,10 +72,11 @@ body {
   }
 }
 
-.circle-picher{
+.circle-picker{
   width: auto !important;
 }
-.chrome-picher{
+
+.chrome-picker{
   width: auto !important;
   box-shadow: none !important;
   border-radius: 0.5rem !important;

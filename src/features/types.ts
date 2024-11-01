@@ -1,5 +1,15 @@
 import { fabric } from "fabric";
 import * as material from "material-colors";
+
+export const selectionDependentTools = [
+    "fill",
+    "font",
+    "filter",
+    "opacity",
+    "remove-bg",
+    "stroke-color",
+    "stroke-width",
+];
 export const colors=[
     material.red ["500"],
 material.pink ["500"],
@@ -38,11 +48,17 @@ export type ActiveTool =
     | "remove-bg"
     | "templates";
 
+
+export type EditorHookProps = {
+    clearSelectionCallback?: () => void;
+} 
+
 export type BuildEditorProps = {
     canvas: fabric.Canvas;
     fillColor: string;
     strokeColor: string;
     strokeWidth: number;
+    selectedObjects: fabric.Object[];
     setFillColor: (value: string) => void;
     setStrokeColor: (value : string) => void;
     setStrokeWidth: (value: number) => void;
@@ -59,10 +75,11 @@ export interface Editor {
     addTriangle : () => void;
     addInverseTriangle : () => void;
     addDiamond : () => void;
-    fillColor :string;
-    strokeColor:string;
+    getActiveFillColor: () => string;
+    getActiveStrokeColor: () => string;
     strokeWidth:number;
     canvas:fabric.Canvas;
+    selectedObjects: fabric.Object[];
 }
 
 export const FILL_COLOR = "rgba(0,0,0,1)";
