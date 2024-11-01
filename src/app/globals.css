@@ -71,3 +71,13 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.circle-picher{
+  width: auto !important;
+}
+.chrome-picher{
+  width: auto !important;
+  box-shadow: none !important;
+  border-radius: 0.5rem !important;
+  overflow: hidden !important;
+}
