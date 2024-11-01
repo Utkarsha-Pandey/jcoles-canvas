@@ -51,11 +51,12 @@ const buildEditor = ({
                     return 1;
                 }
     
-                const value = selectedObject.get("opacity") || strokeColor;
+                const value = selectedObject.get("opacity") || 1;
                 
-                //since we r not using gradient and patterns
+                
                 return value;
             },
+
         changeOpacity: (value: number)=>{
             canvas.getActiveObjects().forEach((object)=>{
                 object.set({opacity :value});

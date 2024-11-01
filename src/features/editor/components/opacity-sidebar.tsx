@@ -28,12 +28,8 @@ export const OpacitySidebar = ({
         onChangeActiveTool("select");
     };
 
-    const onChangeStrokeWidth = (value: number) => {
+    const onChange = (value: number) => {
         editor?.changeOpacity(value);
-    };
-
-    const onChangeStrokeType = (value: number[]) => {
-        editor?.changeStrokeDashArray(value);
     };
 
     return (
