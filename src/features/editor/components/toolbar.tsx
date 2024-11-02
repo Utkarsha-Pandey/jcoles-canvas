@@ -7,7 +7,7 @@ import { RxTransparencyGrid } from "react-icons/rx";
 import { BsBorderWidth } from "react-icons/bs";
 import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
 import { isTextType } from "../utils";
-import { FaBold } from "react-icons/fa";
+import { FaBold, FaItalic } from "react-icons/fa";
 
 interface ToolbarProps {
     editor: Editor | undefined;
@@ -20,15 +20,23 @@ export const Toolbar = ({
     onChangeActiveTool,
 }: ToolbarProps) => {
     // const fillColor = getProperty("fill");
-    const fillColor = editor?.getActiveFillColor();
-    const strokeColor = editor?.getActiveStrokeColor();
-    const fontFamily = editor?.getActiveFontFamily();
-    const fontWeight = editor?.getActiveFontWeight() || FONT_WEIGHT;
+    const initialFillColor = editor?.getActiveFillColor();
+    const initialStrokeColor = editor?.getActiveStrokeColor();
+    const initialFontFamily = editor?.getActiveFontFamily();
+    const initialFontWeight = editor?.getActiveFontWeight() || FONT_WEIGHT;
+    const initialFontStyle = editor?.getActiveFontStyle();
 
     const selectedObject = editor?.selectedObjects[0];
     const selectedObjectType = selectedObject?.type || undefined; // Ensure type is string | undefined
     const isText = isTextType(selectedObjectType);
 
+    const [properties, setProperties] = useState({
+        fillColor: initialFillColor,
+        strokeColor: initialStrokeColor,
+        fontFamily: initialFontFamily,
+        fontWeight: initialFontWeight,
+        fontStyle: initialFontStyle,
+    });
     // if (!editor || editor.selectedObjects.length === 0){
     //     return (
     //         <div
@@ -37,6 +45,34 @@ export const Toolbar = ({
     //     />
     //     )
     // }
+
+    const toggleBold = () => {
+        if (!selectedObject) {
+            return;
+        }
+        const newValue = properties.fontWeight > 500 ? 500 : 700;
+
+        editor?.changeFontWeight(newValue);
+        setProperties((current) => ({
+            ...current,
+            fontWeight: newValue,
+        }));
+    };
+
+    const toggleItalic = () => {
+        if (!selectedObject) {
+            return;
+        }
+
+        const isItalic = properties.fontStyle === "italic"
+        const newValue = isItalic ? "normal" : "italic";
+ 
+        editor?.changeFontStyle(newValue);
+        setProperties((current) => ({
+            ...current,
+            fontStyle: newValue,
+        }));
+    };
 
     return (
         <div
@@ -54,7 +90,7 @@ export const Toolbar = ({
                         <div
                             className="rounded-sm size-4 border"
                             style={{
-                                backgroundColor: fillColor,
+                                backgroundColor: properties.fillColor,
                             }}
                         />
                     </Button>
@@ -75,7 +111,7 @@ export const Toolbar = ({
                             <div
                                 className="rounded-sm size-4 border-2 bg-white"
                                 style={{
-                                    borderColor: strokeColor,
+                                    borderColor: properties.strokeColor,
                                 }}
                             />
                         </Button>
@@ -98,41 +134,54 @@ export const Toolbar = ({
                         </Button>
                     </Hint>
                 </div>
-            )}   
-                <div className="flex items-center h-full justify-center">
-                    <Hint label="Font" side="bottom" sideOffset={5}>
-                        <Button
-                            onClick={() => onChangeActiveTool("font")}
-                            size="icon"
-                            variant="ghost"
-                            className={cn(
-                                "w-auto px-2 text-sm",
-                                activeTool === "font" && "bg-gray-100"
-                            )}
-                        >
-                            <div className="max-w-[300px] truncate">
-                                {fontFamily}
-                                </div>
-                            <ChevronDown className="size-4 ml-2 shrink-0"/>
-                        </Button>
-                    </Hint>
-                </div>
-                <div className="flex items-center h-full justify-center">
-                <Hint label="Bold" side="bottom" sideOffset={5}>
+            )}
+            <div className="flex items-center h-full justify-center">
+                <Hint label="Font" side="bottom" sideOffset={5}>
                     <Button
-                        onClick={() => editor?.bringForward()}
+                        onClick={() => onChangeActiveTool("font")}
                         size="icon"
                         variant="ghost"
                         className={cn(
-                            fontWeight>500 && "bg-gray-100"
+                            "w-auto px-2 text-sm",
+                            activeTool === "font" && "bg-gray-100"
+                        )}
+                    >
+                        <div className="max-w-[300px] truncate">
+                            {properties.fontFamily}
+                        </div>
+                        <ChevronDown className="size-4 ml-2 shrink-0" />
+                    </Button>
+                </Hint>
+            </div>
+            <div className="flex items-center h-full justify-center">
+                <Hint label="Bold" side="bottom" sideOffset={5}>
+                    <Button
+                        onClick={toggleBold}
+                        size="icon"
+                        variant="ghost"
+                        className={cn(
+                            properties.fontWeight > 500 && "bg-gray-100"
                         )}
                     >
                         <FaBold className="size-4 " />
                     </Button>
                 </Hint>
-            </div> 
+            </div>
 
-           
+            <div className="flex items-center h-full justify-center">
+                <Hint label="Italic" side="bottom" sideOffset={5}>
+                    <Button
+                        onClick={toggleItalic}
+                        size="icon"
+                        variant="ghost"
+                        className={cn(
+                            properties.fontStyle === "italic" && "bg-gray-100"
+                        )}
+                    >
+                        <FaItalic className="size-4 " />
+                    </Button>
+                </Hint>
+            </div>
 
             <div className="flex items-center h-full justify-center">
                 <Hint label="Bring Forward" side="bottom" sideOffset={5}>

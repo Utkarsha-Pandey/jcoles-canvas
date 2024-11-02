@@ -50,48 +50,45 @@ const buildEditor = ({
         canvas.setActiveObject(object);
     };
     return {
-
-        addText: (value , options) => {
-            const object = new fabric.Textbox(value , {
+        addText: (value, options) => {
+            const object = new fabric.Textbox(value, {
                 ...TEXT_OPTIONS,
                 fill: fillColor,
                 ...options,
-            })
-            
+            });
 
             addToCanvas(object);
         },
 
-        getActiveOpacity:()=>{
-                const selectedObject = selectedObjects[0];
-                if(!selectedObject){
-                    return 1;
-                }
-    
-                const value = selectedObject.get("opacity") || 1;
-                
-                
-                return value;
-            },
+        getActiveOpacity: () => {
+            const selectedObject = selectedObjects[0];
+            if (!selectedObject) {
+                return 1;
+            }
 
-        changeOpacity: (value: number)=>{
-            canvas.getActiveObjects().forEach((object)=>{
-                object.set({opacity :value});
-            })
+            const value = selectedObject.get("opacity") || 1;
+
+            return value;
+        },
+
+        changeOpacity: (value: number) => {
+            canvas.getActiveObjects().forEach((object) => {
+                object.set({ opacity: value });
+            });
             canvas.renderAll();
         },
         bringForward: () => {
-            canvas.getActiveObjects().forEach((object) =>{
+            canvas.getActiveObjects().forEach((object) => {
                 canvas.bringForward(object);
             });
-            
+
             canvas.renderAll();
 
             const workspace = getWorkspace();
             workspace?.sendToBack();
         },
         sendBackwards: () => {
-            canvas.getActiveObjects().forEach((object) =>{
+            canvas.getActiveObjects().forEach((object) => {
                 canvas.sendBackwards(object);
             });
 
@@ -108,7 +105,28 @@ const buildEditor = ({
                 }
             });
             canvas.renderAll();
-        }, 
+        },
+
+        changeFontWeight: (value: number) => {
+            canvas.getActiveObjects().forEach((object) => {
+                if (isTextType(object.type)) {
+                    //@ts-ignore
+                    object.set({ fontWeight: value });
+                }
+            });
+            canvas.renderAll();
+        },
+
+        changeFontStyle: (value: string) => {
+            canvas.getActiveObjects().forEach((object) => {
+                if (isTextType(object.type)) {
+                    //@ts-ignore
+                    object.set({ fontStyle: value });
+                }
+            });
+            canvas.renderAll();
+        },
+
         changeFillColor: (value: string) => {
             setFillColor(value);
             canvas.getActiveObjects().forEach((object) => {
@@ -145,15 +163,13 @@ const buildEditor = ({
             canvas.renderAll();
         },
 
-
         addCircle: () => {
             const object = new fabric.Circle({
                 ...CIRCLE_OPTIONS,
                 fill: fillColor,
                 stroke: strokeColor,
                 strokeWidth: strokeWidth,
-                strokeDashArray : strokeDashArray,
-
+                strokeDashArray: strokeDashArray,
             });
 
             addToCanvas(object);
@@ -167,8 +183,7 @@ const buildEditor = ({
                 fill: fillColor,
                 stroke: strokeColor,
                 strokeWidth: strokeWidth,
-                strokeDashArray : strokeDashArray,
-
+                strokeDashArray: strokeDashArray,
             });
 
             addToCanvas(object);
@@ -179,8 +194,7 @@ const buildEditor = ({
                 fill: fillColor,
                 stroke: strokeColor,
                 strokeWidth: strokeWidth,
-                strokeDashArray : strokeDashArray,
-
+                strokeDashArray: strokeDashArray,
             });
 
             addToCanvas(object);
@@ -191,8 +205,7 @@ const buildEditor = ({
                 fill: fillColor,
                 stroke: strokeColor,
                 strokeWidth: strokeWidth,
-                strokeDashArray : strokeDashArray,
-
+                strokeDashArray: strokeDashArray,
             });
 
             addToCanvas(object);
@@ -211,8 +224,7 @@ const buildEditor = ({
                     fill: fillColor,
                     stroke: strokeColor,
                     strokeWidth: strokeWidth,
-                    strokeDashArray : strokeDashArray,
-
+                    strokeDashArray: strokeDashArray,
                 }
             );
 
@@ -221,7 +233,7 @@ const buildEditor = ({
         addDiamond: () => {
             const HEIGHT = DIAMOND_OPTIONS.height;
             const WIDTH = DIAMOND_OPTIONS.width;
-            const object = new fabric.Polygon( 
+            const object = new fabric.Polygon(
                 [
                     { x: WIDTH / 2, y: 0 },
                     { x: WIDTH, y: HEIGHT / 2 },
@@ -234,97 +246,111 @@ const buildEditor = ({
                     fill: fillColor,
                     stroke: strokeColor,
                     strokeWidth: strokeWidth,
-                    strokeDashArray : strokeDashArray,
+                    strokeDashArray: strokeDashArray,
                 }
             );
 
             addToCanvas(object);
         },
         canvas,
-        getActiveFillColor : () => {
+        getActiveFillColor: () => {
             const selectedObject = selectedObjects[0];
-            if(!selectedObject){
+            if (!selectedObject) {
                 return fillColor;
             }
 
             const value = selectedObject.get("fill") || fillColor;
-            
+
             //since we r not using gradient and patterns
             return value as string;
         },
-        getActiveFontWeight : () => {
+        getActiveFontWeight: () => {
             const selectedObject = selectedObjects[0];
-            if(!selectedObject){
+            if (!selectedObject) {
                 return FONT_WEIGHT;
             }
-
+            //@ts-ignore
             const value = selectedObject.get("fontWeight") || FONT_FAMILY;
-            
+
             //since we r not using gradient and patterns
-            return value ;
+            return value;
         },
-        getActiveFontFamily : () => {
+
+        getActiveFontStyle: () => {
             const selectedObject = selectedObjects[0];
-            if(!selectedObject){
+            if (!selectedObject) {
+                return "normal";
+            }
+            //@ts-ignore
+            const value = selectedObject.get("fontStyle") || "normal";
+
+            //since we r not using gradient and patterns
+            return value;
+        },
+
+
+        getActiveFontFamily: () => {
+            const selectedObject = selectedObjects[0];
+            if (!selectedObject) {
                 return fontFamily;
             }
-
+            //@ts-ignore
             const value = selectedObject.get("fontFamily") || fontFamily;
-            
+
             //since we r not using gradient and patterns
-            return value ;
+            return value;
         },
 
-        getActiveStrokeColor : () => {
+        getActiveStrokeColor: () => {
             const selectedObject = selectedObjects[0];
-            if(!selectedObject){
+            if (!selectedObject) {
                 return strokeColor;
             }
 
             const value = selectedObject.get("stroke") || strokeColor;
-            
+
             //since we r not using gradient and patterns
             return value;
         },
-        getActiveStrokeWidth : () => {
+        getActiveStrokeWidth: () => {
             const selectedObject = selectedObjects[0];
-            if(!selectedObject){
+            if (!selectedObject) {
                 return strokeWidth;
             }
 
             const value = selectedObject.get("strokeWidth") || strokeWidth;
-            
+
             //since we r not using gradient and patterns
             return value;
         },
 
-        getActiveStrokeDashArray : () => {
+        getActiveStrokeDashArray: () => {
             const selectedObject = selectedObjects[0];
-            if(!selectedObject){
+            if (!selectedObject) {
                 return strokeDashArray;
             }
 
-            const value = selectedObject.get("strokeDashArray") || strokeDashArray;
-            
+            const value =
+                selectedObject.get("strokeDashArray") || strokeDashArray;
+
             //since we r not using gradient and patterns
             return value;
         },
-        
+
         selectedObjects,
     };
 };
-export const useEditor = ({
-    clearSelectionCallback
-} : EditorHookProps) => {
+export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
     const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
 
-    const[fontFamily,setFontFamily]=useState(FONT_FAMILY);
+    const [fontFamily, setFontFamily] = useState(FONT_FAMILY);
     const [fillColor, setFillColor] = useState(FILL_COLOR);
     const [strokeColor, setStrokeColor] = useState(STROKE_COLOR);
     const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
-    const [strokeDashArray, setStrokeDashArray] = useState<number[]>(STROKE_DASH_ARRAY);
+    const [strokeDashArray, setStrokeDashArray] =
+        useState<number[]>(STROKE_DASH_ARRAY);
 
     useAutoResize({ canvas, container });
 
@@ -333,8 +359,6 @@ export const useEditor = ({
         container,
         setSelectedObjects,
         clearSelectionCallback,
-
-
     });
 
     const editor = useMemo(() => {
@@ -352,12 +376,19 @@ export const useEditor = ({
                 selectedObjects,
                 fontFamily,
                 setFontFamily,
-                
             });
         }
 
         return undefined;
-    }, [canvas, fillColor, strokeColor, strokeWidth, selectedObjects, strokeDashArray,fontFamily]);
+    }, [
+        canvas,
+        fillColor,
+        strokeColor,
+        strokeWidth,
+        selectedObjects,
+        strokeDashArray,
+        fontFamily,
+    ]);
     const init = useCallback(
         ({
             initialCanvas,
