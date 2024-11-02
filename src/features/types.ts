@@ -93,6 +93,7 @@ export type BuildEditorProps = {
 
 export interface Editor {
 
+    getActiveFontWeight:()=>number;
     getActiveFontFamily:()=>string;
     changeFontFamily:(value:string)=>void;
     addText: (value: string , options?: ITextboxOptions) => void;

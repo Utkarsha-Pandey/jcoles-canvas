@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ActiveTool, Editor } from "../../types";
+import { ActiveTool, Editor, FONT_WEIGHT } from "../../types";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,7 @@ import { RxTransparencyGrid } from "react-icons/rx";
 import { BsBorderWidth } from "react-icons/bs";
 import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
 import { isTextType } from "../utils";
+import { FaBold } from "react-icons/fa";
 
 interface ToolbarProps {
     editor: Editor | undefined;
@@ -22,6 +23,7 @@ export const Toolbar = ({
     const fillColor = editor?.getActiveFillColor();
     const strokeColor = editor?.getActiveStrokeColor();
     const fontFamily = editor?.getActiveFontFamily();
+    const fontWeight = editor?.getActiveFontWeight() || FONT_WEIGHT;
 
     const selectedObject = editor?.selectedObjects[0];
     const selectedObjectType = selectedObject?.type || undefined; // Ensure type is string | undefined
@@ -39,7 +41,7 @@ export const Toolbar = ({
     return (
         <div
             className="shrink-0 h-[56px] border-b bg-white w-full flex 
-        items-center overflow-x-auto z-[49] p-2 gap-x-2"
+        items-center overflow-x-auto z-[49] p-2 gap-x-2 "
         >
             <div className="flex items-center h-full justify-center">
                 <Hint label="Color" side="bottom" sideOffset={5}>
@@ -115,6 +117,21 @@ export const Toolbar = ({
                         </Button>
                     </Hint>
                 </div>
+                <div className="flex items-center h-full justify-center">
+                <Hint label="Bold" side="bottom" sideOffset={5}>
+                    <Button
+                        onClick={() => editor?.bringForward()}
+                        size="icon"
+                        variant="ghost"
+                        className={cn(
+                            fontWeight>500 && "bg-gray-100"
+                        )}
+                    >
+                        <FaBold className="size-4 " />
+                    </Button>
+                </Hint>
+            </div> 
+
            
 
             <div className="flex items-center h-full justify-center">

@@ -9,6 +9,7 @@ import {
     EditorHookProps,
     FILL_COLOR,
     FONT_FAMILY,
+    FONT_WEIGHT,
     RECTANGLE_OPTIONS,
     STROKE_COLOR,
     STROKE_DASH_ARRAY,
@@ -250,6 +251,17 @@ const buildEditor = ({
             
             //since we r not using gradient and patterns
             return value as string;
+        },
+        getActiveFontWeight : () => {
+            const selectedObject = selectedObjects[0];
+            if(!selectedObject){
+                return FONT_WEIGHT;
+            }
+
+            const value = selectedObject.get("fontWeight") || FONT_FAMILY;
+            
+            //since we r not using gradient and patterns
+            return value ;
         },
         getActiveFontFamily : () => {
             const selectedObject = selectedObjects[0];
