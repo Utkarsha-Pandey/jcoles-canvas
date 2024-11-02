@@ -1,17 +1,11 @@
-import { ActiveTool, Editor, STROKE_COLOR } from "@/features/types";
 import { useEffect, useState, useMemo} from "react";
-import {
-    ActiveTool,
-    Editor,
-    STROKE_COLOR,
-} from "@/features/types";
+import { ActiveTool, Editor, STROKE_COLOR } from "@/features/types";
 import { cn } from "@/lib/utils";
 import { ToolSidebarHeader } from "./tool-sidebar-header";
 import { ToolSidebarClose } from "./tool-sidebar-close";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Slider } from "@/components/ui/slider";
-import { useEffect, useMemo, useState } from "react";
 
 interface OpacitySidebarProps {
     editor: Editor | undefined;
