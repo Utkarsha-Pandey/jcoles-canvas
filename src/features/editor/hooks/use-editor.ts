@@ -8,6 +8,7 @@ import {
     Editor,
     EditorHookProps,
     FILL_COLOR,
+    FONT_FAMILY,
     RECTANGLE_OPTIONS,
     STROKE_COLOR,
     STROKE_DASH_ARRAY,
@@ -21,6 +22,8 @@ import { isTextType } from "../utils";
 const buildEditor = ({
     canvas,
     fillColor,
+    fontFamily,
+    setFontFamily,
     setFillColor,
     strokeColor,
     setStrokeColor,
@@ -96,6 +99,15 @@ const buildEditor = ({
             workspace?.sendToBack();
         },
 
+        changeFontFamily: (value: string) => {
+            setFontFamily(value);
+            canvas.getActiveObjects().forEach((object) => {
+                if (isTextType(object.type)) {
+                    (object as fabric.Textbox).set({ fontFamily: value });
+                }
+            });
+            canvas.renderAll();
+        }, 
         changeFillColor: (value: string) => {
             setFillColor(value);
             canvas.getActiveObjects().forEach((object) => {
@@ -239,6 +251,17 @@ const buildEditor = ({
             //since we r not using gradient and patterns
             return value as string;
         },
+        getActiveFontFamily : () => {
+            const selectedObject = selectedObjects[0];
+            if(!selectedObject){
+                return fontFamily;
+            }
+
+            const value = selectedObject.get("fontFamily") || fontFamily;
+            
+            //since we r not using gradient and patterns
+            return value ;
+        },
 
         getActiveStrokeColor : () => {
             const selectedObject = selectedObjects[0];
@@ -285,6 +308,7 @@ export const useEditor = ({
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
     const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
 
+    const[fontFamily,setFontFamily]=useState(FONT_FAMILY);
     const [fillColor, setFillColor] = useState(FILL_COLOR);
     const [strokeColor, setStrokeColor] = useState(STROKE_COLOR);
     const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
@@ -314,12 +338,14 @@ export const useEditor = ({
                 setStrokeDashArray,
                 setStrokeWidth,
                 selectedObjects,
+                fontFamily,
+                setFontFamily,
                 
             });
         }
 
         return undefined;
-    }, [canvas, fillColor, strokeColor, strokeWidth, selectedObjects, strokeDashArray]);
+    }, [canvas, fillColor, strokeColor, strokeWidth, selectedObjects, strokeDashArray,fontFamily]);
     const init = useCallback(
         ({
             initialCanvas,
