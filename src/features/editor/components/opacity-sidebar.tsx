@@ -1,4 +1,10 @@
 import { ActiveTool, Editor, STROKE_COLOR } from "@/features/types";
+import { useEffect, useState, useMemo} from "react";
+import {
+    ActiveTool,
+    Editor,
+    STROKE_COLOR,
+} from "@/features/types";
 import { cn } from "@/lib/utils";
 import { ToolSidebarHeader } from "./tool-sidebar-header";
 import { ToolSidebarClose } from "./tool-sidebar-close";
