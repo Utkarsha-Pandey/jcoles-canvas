@@ -29,8 +29,7 @@ export const FontSizeInput = ({ value, onChange }: FontSizeInputProps) => {
                 <Input
                     onChange={handleChange}
                     value={value}
-                    className="w-[50px] h-8 focus-visible:ring-offset-0
-            focus-visible:ring-0 rounded-none"
+                    className="w-[50px] h-8 rounded-none"
                 />
             </Button>
             <Button
