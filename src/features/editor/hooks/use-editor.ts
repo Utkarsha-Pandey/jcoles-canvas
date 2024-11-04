@@ -9,6 +9,7 @@ import {
     EditorHookProps,
     FILL_COLOR,
     FONT_FAMILY,
+    FONT_SIZE,
     FONT_WEIGHT,
     RECTANGLE_OPTIONS,
     STROKE_COLOR,
@@ -51,6 +52,12 @@ const buildEditor = ({
         canvas.setActiveObject(object);
     };
     return {
+
+        delete : () => {
+            canvas.getActiveObjects().forEach((object) => canvas.remove(object));
+            canvas.discardActiveObject();
+            canvas.renderAll();
+        },
         addText: (value, options) => {
             const object = new fabric.Textbox(value, {
                 ...TEXT_OPTIONS,
@@ -156,6 +163,17 @@ const buildEditor = ({
                     //@ts-ignore
                     //Faulty TS library, textAlign exists.
                     object.set({ textAlign: value });
+                }
+            });
+            canvas.renderAll();
+        },
+
+        changeFontSize: (value: number ) => {
+            canvas.getActiveObjects().forEach((object) => {
+                if (isTextType(object.type)) {
+                    //@ts-ignore
+                    //Faulty TS library, textAlign exists.
+                    object.set({ fontSize: value });
                 }
             });
             canvas.renderAll();
@@ -358,6 +376,20 @@ const buildEditor = ({
             
             return value;
         },
+
+
+        getActiveFontSize: () => {
+            const selectedObject = selectedObjects[0];
+            if (!selectedObject) {
+                return FONT_SIZE;
+            }
+            //@ts-ignore
+            const value = selectedObject.get("fontSize") || FONT_SIZE;
+
+            
+            return value;
+        },
+
 
         getActiveFontFamily: () => {
             const selectedObject = selectedObjects[0];

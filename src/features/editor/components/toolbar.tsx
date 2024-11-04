@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ActiveTool, Editor, FONT_WEIGHT } from "../../types";
+import { ActiveTool, Editor, FONT_SIZE, FONT_WEIGHT } from "../../types";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ import {
     ArrowDown,
     ArrowUp,
     ChevronDown,
+    Trash,
 } from "lucide-react";
 import { isTextType } from "../utils";
 import { FaBold, FaItalic, FaStrikethrough, FaUnderline } from "react-icons/fa";
@@ -36,6 +37,7 @@ export const Toolbar = ({
     const initialLinethrough = editor?.getActiveFontLineThrough();
     const initialUnderline = editor?.getActiveFontUnderline();
     const initialTextAlign = editor?.getActiveTextAlign();
+    const initialFontSize = editor?.getActiveFontSize() || FONT_SIZE;
 
     const selectedObject = editor?.selectedObjects[0];
     const selectedObjectType = selectedObject?.type; // Ensure type is string | undefined
@@ -52,6 +54,7 @@ export const Toolbar = ({
         fontLinethrough: initialLinethrough,
         fontUnderline: initialUnderline,
         textAlign: initialTextAlign,
+        fontSize: initialFontSize,
     });
     // if (!editor || editor.selectedObjects.length === 0){
     //     return (
@@ -127,6 +130,18 @@ export const Toolbar = ({
         setProperties((current) => ({
             ...current,
             textAlign: value,
+        }));
+    };
+
+    const onChangeFontSize = (value: number) => {
+        if (!selectedObject) {
+            return;
+        }
+
+        editor?.changeFontSize(value);
+        setProperties((current) => ({
+            ...current,
+            fontSize: value,
         }));
     };
 
@@ -315,7 +330,11 @@ export const Toolbar = ({
                 </Hint>
             </div>
             <div className="flex items-center h-full justify-center">
-               <FontSizeInput/>
+                <FontSizeInput
+                    value={properties.fontSize} 
+                    onChange={onChangeFontSize}
+
+                />
             </div>
 
             <div className="flex items-center h-full justify-center">
@@ -352,6 +371,19 @@ export const Toolbar = ({
                         )}
                     >
                         <RxTransparencyGrid className="size-4 " />
+                    </Button>
+                </Hint>
+            </div>
+
+            <div className="flex items-center h-full justify-center">
+                <Hint label="Delete" side="bottom" sideOffset={5}>
+                    <Button
+                        onClick={() => editor?.delete()}
+                        size="icon"
+                        variant="ghost"
+                        
+                    >
+                        <Trash className="size-4 " />
                     </Button>
                 </Hint>
             </div>
