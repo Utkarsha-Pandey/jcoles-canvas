@@ -38,7 +38,7 @@ export const Navbar = ({
             {/* Left Side - Logo and Main Controls */}
             <div className="flex items-center gap-x-4">
                 <Logo />
-                <DropdownMenu modal={false}>
+                {/* <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <Button>
                             File
@@ -59,7 +59,7 @@ export const Navbar = ({
                             </div>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
                 <Separator orientation="vertical" className="mx-2" />
                 <Hint label="Select" side="bottom" sideOffset={10}>
                     <Button variant="ghost" size="icon" onClick={() => onChangeActiveTool("select")} className={cn(activeTool === "select" && "bg-gray-100")}>
@@ -77,14 +77,14 @@ export const Navbar = ({
                     </Button>
                 </Hint>
                 <Separator orientation="vertical" className="mx-2" />
-                <div className="flex items-center gap-x-2">
+                {/* <div className="flex items-center gap-x-2">
                     <BsCloudCheck className="size-[20px] text-muted-foreground" />
                     <div className="text-xs text-muted-foreground">Saved</div>
-                </div>
+                </div> */}
             </div>
 
             {/* Right Side - Export Button */}
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
                 <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <Button size="sm" variant="ghost">
@@ -143,7 +143,7 @@ export const Navbar = ({
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-            </div>
+            </div> */}
         </nav>
     );
 };

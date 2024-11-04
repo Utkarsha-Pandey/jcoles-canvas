@@ -1,6 +1,6 @@
 "use client";
 
-import { act, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useEditor } from "../hooks/use-editor";
 import { fabric } from "fabric";
 
@@ -14,6 +14,9 @@ import { FillColorSidebar } from "./fill-color-sidebar";
 import { StrokeColorSidebar } from "./stroke-color-sidebar";
 import { StrokeWidthSidebar } from "./stroke-width-sidebar";
 import { OpacitySidebar } from "./opacity-sidebar";
+import { TextSidebar } from "./text-sidebar";
+import { FontSidebar } from "./font-sidebar";
+import { ImageSidebar } from "./image-sidebar";
 
 export const Editor = () => {
     const [activeTool, setActiveTool] = useState<ActiveTool>("select");
@@ -96,11 +99,30 @@ export const Editor = () => {
                     activeTool={activeTool}
                     onChangeActiveTool={onChangeActiveTool}
                 />
+
                 <OpacitySidebar
                     editor={editor}
                     activeTool={activeTool}
                     onChangeActiveTool={onChangeActiveTool}
                 />
+
+                <TextSidebar
+                    editor={editor}
+                    activeTool={activeTool}
+                    onChangeActiveTool={onChangeActiveTool}
+                />
+                <FontSidebar
+                    editor={editor}
+                    activeTool={activeTool}
+                    onChangeActiveTool={onChangeActiveTool}
+                />
+
+                <ImageSidebar
+                    editor={editor}
+                    activeTool={activeTool}
+                    onChangeActiveTool={onChangeActiveTool}
+                />
+
                 <main className="bg-muted flex-1 overflow-hidden relative flex flex-col">
                     <Toolbar
                         editor={editor}
