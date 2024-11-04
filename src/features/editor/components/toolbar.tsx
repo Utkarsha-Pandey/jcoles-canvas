@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { isTextType } from "../utils";
 import { FaBold, FaItalic, FaStrikethrough, FaUnderline } from "react-icons/fa";
+import { FontSizeInput } from "./font-size-input";
 
 interface ToolbarProps {
     editor: Editor | undefined;
@@ -312,6 +313,9 @@ export const Toolbar = ({
                         <AlignRight className="size-4 " />
                     </Button>
                 </Hint>
+            </div>
+            <div className="flex items-center h-full justify-center">
+               <FontSizeInput/>
             </div>
 
             <div className="flex items-center h-full justify-center">
