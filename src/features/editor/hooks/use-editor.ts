@@ -19,6 +19,7 @@ import {
 } from "@/features/types";
 import { useCanvasEvents } from "./use-canvas-events";
 import { isTextType } from "../utils";
+import { ITextboxOptions, ITextOptions } from "fabric/fabric-impl";
 
 const buildEditor = ({
     canvas,
@@ -126,6 +127,40 @@ const buildEditor = ({
             });
             canvas.renderAll();
         },
+        
+        changeFontLineThrough: (value: boolean) => {
+            canvas.getActiveObjects().forEach((object) => {
+                if (isTextType(object.type)) {
+                    //@ts-ignore
+                    //Faulty TS library, linethrough exists.
+                    object.set({ linethrough: value });
+                }
+            });
+            canvas.renderAll();
+        },
+
+        changeFontUnderline: (value: boolean) => {
+            canvas.getActiveObjects().forEach((object) => {
+                if (isTextType(object.type)) {
+                    //@ts-ignore
+                    //Faulty TS library, underline exists.
+                    object.set({ underline: value });
+                }
+            });
+            canvas.renderAll();
+        },
+
+        changeTextAlign: (value: string ) => {
+            canvas.getActiveObjects().forEach((object) => {
+                if (isTextType(object.type)) {
+                    //@ts-ignore
+                    //Faulty TS library, textAlign exists.
+                    object.set({ textAlign: value });
+                }
+            });
+            canvas.renderAll();
+        },
+
 
         changeFillColor: (value: string) => {
             setFillColor(value);
@@ -287,7 +322,42 @@ const buildEditor = ({
             //since we r not using gradient and patterns
             return value;
         },
+        
+        getActiveFontLineThrough: () => {
+            const selectedObject = selectedObjects[0];
+            if (!selectedObject) {
+                return false;
+            }
+            //@ts-ignore
+            const value = selectedObject.get("linethrough") || "normal";
 
+            
+            return value;
+        },
+
+        getActiveFontUnderline: () => {
+            const selectedObject = selectedObjects[0];
+            if (!selectedObject) {
+                return false;
+            }
+            //@ts-ignore
+            const value = selectedObject.get("underline") || "normal";
+
+            
+            return value;
+        },
+
+        getActiveTextAlign: () => {
+            const selectedObject = selectedObjects[0];
+            if (!selectedObject) {
+                return "left";
+            }
+            //@ts-ignore
+            const value = selectedObject.get("textAlign") || "left";
+
+            
+            return value;
+        },
 
         getActiveFontFamily: () => {
             const selectedObject = selectedObjects[0];
@@ -422,7 +492,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
                 }),
             });
 
-            console.log(initialContainer.offsetHeight);
+            
 
             // const heighKamHai = initialContainer.offsetHeight < 800 ? 1200 : initialContainer.offsetHeight;
 
