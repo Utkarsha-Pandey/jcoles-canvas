@@ -43,7 +43,8 @@ export const Toolbar = ({
     const selectedObjectType = selectedObject?.type; // Ensure type is string | undefined
     const isText = isTextType(selectedObjectType);
 
-    console.log("Selected Object Type:", selectedObjectType); // Add this to check type
+    // console.log("Selected Object Type:", selectedObjectType); // Add this to check type
+
 
     const [properties, setProperties] = useState({
         fillColor: initialFillColor,

@@ -123,16 +123,18 @@ const buildEditor = ({
         changeFontFamily: (value: string) => {
             setFontFamily(value);
             canvas.getActiveObjects().forEach((object) => {
-                if (isTextType(object.type)) {
+                // Check if object.type is a string and matches text types
+                if (typeof object.type === "string" && isTextType(object.type)) {
                     (object as fabric.Textbox).set({ fontFamily: value });
                 }
             });
             canvas.renderAll();
         },
+        
 
         changeFontWeight: (value: number) => {
             canvas.getActiveObjects().forEach((object) => {
-                if (isTextType(object.type)) {
+                if (typeof object.type === "string" && isTextType(object.type)) {
                     //@ts-ignore
                     object.set({ fontWeight: value });
                 }
@@ -142,7 +144,7 @@ const buildEditor = ({
 
         changeFontStyle: (value: string) => {
             canvas.getActiveObjects().forEach((object) => {
-                if (isTextType(object.type)) {
+                if (typeof object.type === "string" && isTextType(object.type)) {
                     //@ts-ignore
                     object.set({ fontStyle: value });
                 }
@@ -152,7 +154,7 @@ const buildEditor = ({
         
         changeFontLineThrough: (value: boolean) => {
             canvas.getActiveObjects().forEach((object) => {
-                if (isTextType(object.type)) {
+                if (typeof object.type === "string" && isTextType(object.type)) {
                     //@ts-ignore
                     //Faulty TS library, linethrough exists.
                     object.set({ linethrough: value });
@@ -163,7 +165,7 @@ const buildEditor = ({
 
         changeFontUnderline: (value: boolean) => {
             canvas.getActiveObjects().forEach((object) => {
-                if (isTextType(object.type)) {
+                if (typeof object.type === "string" && isTextType(object.type)) {
                     //@ts-ignore
                     //Faulty TS library, underline exists.
                     object.set({ underline: value });
@@ -174,7 +176,7 @@ const buildEditor = ({
 
         changeTextAlign: (value: string ) => {
             canvas.getActiveObjects().forEach((object) => {
-                if (isTextType(object.type)) {
+                if (typeof object.type === "string" && isTextType(object.type)) {
                     //@ts-ignore
                     //Faulty TS library, textAlign exists.
                     object.set({ textAlign: value });
@@ -185,7 +187,7 @@ const buildEditor = ({
 
         changeFontSize: (value: number ) => {
             canvas.getActiveObjects().forEach((object) => {
-                if (isTextType(object.type)) {
+                if (typeof object.type === "string" && isTextType(object.type)) {
                     //@ts-ignore
                     //Faulty TS library, textAlign exists.
                     object.set({ fontSize: value });
@@ -206,7 +208,7 @@ const buildEditor = ({
             setStrokeColor(value);
             canvas.getActiveObjects().forEach((object) => {
                 //text types don't have stroke
-                if (isTextType(object.type)) {
+                if (typeof object.type === "string" && isTextType(object.type)) {
                     object.set({ fill: value });
                     return;
                 }
