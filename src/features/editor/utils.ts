@@ -1,8 +1,14 @@
 import type { RGBColor } from "react-color";
-import {fabric} from "fabric";
-export function isTextType(type: string | undefined) {
-    return type === "text" || type === "i-text" || type === "textbox";
-}
+
+export const isTextType = (type: string | undefined): boolean => {
+    return (
+        type === "textbox" ||
+        type === "text" ||
+        type === "i-text"
+    );
+};
+
+
 
 export function rgbObjectToString(rgba: RGBColor | "transparent") {
     if (rgba === "transparent") {

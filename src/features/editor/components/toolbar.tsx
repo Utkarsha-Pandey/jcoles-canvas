@@ -45,7 +45,8 @@ export const Toolbar = ({
     const isText = isTextType(selectedObjectType);
     const isImage =selectedObjectType === "image";
 
-    console.log("Selected Object Type:", selectedObjectType); // Add this to check type
+    // console.log("Selected Object Type:", selectedObjectType); // Add this to check type
+
 
     const [properties, setProperties] = useState({
         fillColor: initialFillColor,

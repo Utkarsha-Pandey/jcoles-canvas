@@ -17,13 +17,13 @@ export const useCanvasEvents = ({
 } : UseCanvasEventsProps) =>{
     useEffect(() => {
         if(canvas){
-            canvas.on("selected:created" , (e) => {
+            canvas.on("selection:created" , (e) => {
                 setSelectedObjects(e.selected || []); 
             })
-            canvas.on("selected:updated" , (e) => {
+            canvas.on("selection:updated" , (e) => {
                 setSelectedObjects(e.selected || []);
             })
-            canvas.on("selected:cleared" , (e) => {
+            canvas.on("selection:cleared" , (e) => {
                 setSelectedObjects(e.selected || []);
                 clearSelectionCallback?.(); 
             })
