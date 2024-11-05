@@ -3,6 +3,7 @@ import type { RGBColor } from "react-color";
 export function isTextType(type: string | undefined) {
     return type === "text" || type === "i-text" || type === "textbox";
 }
+
 export function rgbObjectToString(rgba: RGBColor | "transparent") {
     if (rgba === "transparent") {
         return `rgba(0,0,0,0)`;
