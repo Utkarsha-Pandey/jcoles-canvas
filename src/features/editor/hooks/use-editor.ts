@@ -52,6 +52,15 @@ const buildEditor = ({
         canvas.setActiveObject(object);
     };
     return {
+        changeImageFilter:(value:string)=>{
+           const objects = canvas.getActiveObjects();
+           objects.forEach((object)=>{
+            if(object.type === "image"){
+                   const imageObject =object as fabric.Image;
+
+            }
+           })
+        },  
         addImage : (value : string) => {
             fabric.Image.fromURL(
                 value,

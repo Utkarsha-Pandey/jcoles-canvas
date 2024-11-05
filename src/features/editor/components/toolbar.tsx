@@ -3,6 +3,7 @@ import { ActiveTool, Editor, FONT_SIZE, FONT_WEIGHT } from "../../types";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {TbColorFilter} from "react-icons/tb"
 import { RxTransparencyGrid } from "react-icons/rx";
 import { BsBorderWidth } from "react-icons/bs";
 import {
@@ -42,6 +43,7 @@ export const Toolbar = ({
     const selectedObject = editor?.selectedObjects[0];
     const selectedObjectType = selectedObject?.type; // Ensure type is string | undefined
     const isText = isTextType(selectedObjectType);
+    const isImage =selectedObjectType === "image";
 
     console.log("Selected Object Type:", selectedObjectType); // Add this to check type
 
@@ -150,6 +152,7 @@ export const Toolbar = ({
             className="shrink-0 h-[56px] border-b bg-white w-full flex 
         items-center overflow-x-auto z-[49] p-2 gap-x-2 "
         >
+            {!isImage && (
             <div className="flex items-center h-full justify-center">
                 <Hint label="Color" side="bottom" sideOffset={5}>
                     <Button
@@ -167,7 +170,7 @@ export const Toolbar = ({
                     </Button>
                 </Hint>
             </div>
-
+              )}
             {!isText && (
                 <div className="flex items-center h-full justify-center">
                     <Hint label="Stroke Color" side="bottom" sideOffset={5}>
@@ -336,6 +339,22 @@ export const Toolbar = ({
 
                 />
             </div>
+            {isImage && (
+            <div className="flex items-center h-full justify-center">
+                <Hint label="Filters" side="bottom" sideOffset={5}>
+                    <Button
+                        onClick={() => onChangeActiveTool("filter")}
+                        size="icon"
+                        variant="ghost"
+                        className={cn(
+                            activeTool === "filter" && "bg-gray-100"
+                        )}
+                    >
+                        <TbColorFilter className="size-4 " />
+                    </Button>
+                </Hint>
+            </div>
+            )}
 
             <div className="flex items-center h-full justify-center">
                 <Hint label="Bring Forward" side="bottom" sideOffset={5}>
