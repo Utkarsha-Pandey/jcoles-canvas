@@ -18,6 +18,7 @@ import { TextSidebar } from "./text-sidebar";
 import { FontSidebar } from "./font-sidebar";
 import { ImageSidebar } from "./image-sidebar";
 import { FilterSidebar } from "./filter-sidebar";
+import { SettingsSidebar } from "./settings-sidebar";
 
 export const Editor = () => {
     const [activeTool, setActiveTool] = useState<ActiveTool>("select");
@@ -125,6 +126,11 @@ export const Editor = () => {
                 />
 
                 <FilterSidebar
+                    editor={editor}
+                    activeTool={activeTool}
+                    onChangeActiveTool={onChangeActiveTool}
+                />
+                <SettingsSidebar
                     editor={editor}
                     activeTool={activeTool}
                     onChangeActiveTool={onChangeActiveTool}

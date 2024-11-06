@@ -23,6 +23,7 @@ import { createFilter, isTextType } from "../utils";
 import { useClipboard } from "./use-clipboard";
 
 const buildEditor = ({
+    autoZoom,
     copy,
     paste,
     canvas,
@@ -54,6 +55,20 @@ const buildEditor = ({
         canvas.setActiveObject(object);
     };
     return {
+        getWorkspace,
+        changeSize: (value: {width:number;height:number })=>{
+           const workspace = getWorkspace();
+
+           workspace?.set(value);
+           autoZoom();
+           //TODO save
+        },
+        changeBackground: ( value:string  )=>{
+           const workspace = getWorkspace();
+           workspace?.set({fill:value});
+           canvas.renderAll();
+           //TODO save
+        },
         enableDrawingMode : () => {
             canvas.discardActiveObject();
             canvas.renderAll();
@@ -518,7 +533,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
         useState<number[]>(STROKE_DASH_ARRAY);
 
     const { copy, paste } = useClipboard({ canvas });
-    useAutoResize({ canvas, container });
+    const {autoZoom}= useAutoResize({ canvas, container });
 
     useCanvasEvents({
         canvas,
@@ -530,6 +545,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     const editor = useMemo(() => {
         if (canvas) {
             return buildEditor({
+                autoZoom, 
                 copy,
                 paste,
                 canvas,
@@ -549,6 +565,9 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 
         return undefined;
     }, [
+        autoZoom,
+        copy,
+        paste,
         canvas,
         fillColor,
         strokeColor,
@@ -589,7 +608,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
                     blur: 5,
                 }),
             });
-
+ 
             // const heighKamHai = initialContainer.offsetHeight < 800 ? 1200 : initialContainer.offsetHeight;
 
             initialCanvas.setDimensions({
