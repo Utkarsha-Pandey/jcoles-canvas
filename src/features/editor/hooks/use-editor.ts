@@ -20,9 +20,11 @@ import {
 } from "@/features/types";
 import { useCanvasEvents } from "./use-canvas-events";
 import { createFilter, isTextType } from "../utils";
-import { ITextboxOptions, ITextOptions } from "fabric/fabric-impl";
+import { useClipboard } from "./use-clipboard";
 
 const buildEditor = ({
+    copy,
+    paste,
     canvas,
     fillColor,
     fontFamily,
@@ -52,23 +54,34 @@ const buildEditor = ({
         canvas.setActiveObject(object);
     };
     return {
-        
+        enableDrawingMode : () => {
+            canvas.discardActiveObject();
+            canvas.renderAll();
+            canvas.isDrawingMode = true;
+            canvas.freeDrawingBrush.width = strokeWidth;
+            canvas.freeDrawingBrush.color = strokeColor;
+        },
 
-        changeImageFilter:(value:string)=>{
-           const objects = canvas.getActiveObjects();
-           objects.forEach((object)=>{
-            if(object.type === "image"){
-                   const imageObject =object as fabric.Image;
+        disableDrawingMode : () => {
+            canvas.isDrawingMode = false;
+        },
+        onCopy: () => copy(),
+        onPaste: () => paste(),
+
+        changeImageFilter: (value: string) => {
+            const objects = canvas.getActiveObjects();
+            objects.forEach((object) => {
+                if (object.type === "image") {
+                    const imageObject = object as fabric.Image;
                     const effect = createFilter(value);
 
-                    imageObject.filters = effect? [effect] : [];
+                    imageObject.filters = effect ? [effect] : [];
                     imageObject.applyFilters();
                     canvas.renderAll();
-
-            }
-           })
-        },  
-        addImage : (value : string) => {
+                }
+            });
+        },
+        addImage: (value: string) => {
             fabric.Image.fromURL(
                 value,
                 (image) => {
@@ -77,15 +90,16 @@ const buildEditor = ({
                     image.scaleToHeight(workspace?.height || 0);
 
                     addToCanvas(image);
-
                 },
                 {
                     crossOrigin: "anonymous",
                 }
-            )
+            );
         },
-        delete : () => {
-            canvas.getActiveObjects().forEach((object) => canvas.remove(object));
+        delete: () => {
+            canvas
+                .getActiveObjects()
+                .forEach((object) => canvas.remove(object));
             canvas.discardActiveObject();
             canvas.renderAll();
         },
@@ -140,17 +154,22 @@ const buildEditor = ({
             setFontFamily(value);
             canvas.getActiveObjects().forEach((object) => {
                 // Check if object.type is a string and matches text types
-                if (typeof object.type === "string" && isTextType(object.type)) {
+                if (
+                    typeof object.type === "string" &&
+                    isTextType(object.type)
+                ) {
                     (object as fabric.Textbox).set({ fontFamily: value });
                 }
             });
             canvas.renderAll();
         },
-        
 
         changeFontWeight: (value: number) => {
             canvas.getActiveObjects().forEach((object) => {
-                if (typeof object.type === "string" && isTextType(object.type)) {
+                if (
+                    typeof object.type === "string" &&
+                    isTextType(object.type)
+                ) {
                     //@ts-ignore
                     object.set({ fontWeight: value });
                 }
@@ -160,17 +179,23 @@ const buildEditor = ({
 
         changeFontStyle: (value: string) => {
             canvas.getActiveObjects().forEach((object) => {
-                if (typeof object.type === "string" && isTextType(object.type)) {
+                if (
+                    typeof object.type === "string" &&
+                    isTextType(object.type)
+                ) {
                     //@ts-ignore
                     object.set({ fontStyle: value });
                 }
             });
             canvas.renderAll();
         },
-        
+
         changeFontLineThrough: (value: boolean) => {
             canvas.getActiveObjects().forEach((object) => {
-                if (typeof object.type === "string" && isTextType(object.type)) {
+                if (
+                    typeof object.type === "string" &&
+                    isTextType(object.type)
+                ) {
                     //@ts-ignore
                     //Faulty TS library, linethrough exists.
                     object.set({ linethrough: value });
@@ -181,7 +206,10 @@ const buildEditor = ({
 
         changeFontUnderline: (value: boolean) => {
             canvas.getActiveObjects().forEach((object) => {
-                if (typeof object.type === "string" && isTextType(object.type)) {
+                if (
+                    typeof object.type === "string" &&
+                    isTextType(object.type)
+                ) {
                     //@ts-ignore
                     //Faulty TS library, underline exists.
                     object.set({ underline: value });
@@ -190,9 +218,12 @@ const buildEditor = ({
             canvas.renderAll();
         },
 
-        changeTextAlign: (value: string ) => {
+        changeTextAlign: (value: string) => {
             canvas.getActiveObjects().forEach((object) => {
-                if (typeof object.type === "string" && isTextType(object.type)) {
+                if (
+                    typeof object.type === "string" &&
+                    isTextType(object.type)
+                ) {
                     //@ts-ignore
                     //Faulty TS library, textAlign exists.
                     object.set({ textAlign: value });
@@ -201,9 +232,12 @@ const buildEditor = ({
             canvas.renderAll();
         },
 
-        changeFontSize: (value: number ) => {
+        changeFontSize: (value: number) => {
             canvas.getActiveObjects().forEach((object) => {
-                if (typeof object.type === "string" && isTextType(object.type)) {
+                if (
+                    typeof object.type === "string" &&
+                    isTextType(object.type)
+                ) {
                     //@ts-ignore
                     //Faulty TS library, textAlign exists.
                     object.set({ fontSize: value });
@@ -211,7 +245,6 @@ const buildEditor = ({
             });
             canvas.renderAll();
         },
-
 
         changeFillColor: (value: string) => {
             setFillColor(value);
@@ -224,7 +257,10 @@ const buildEditor = ({
             setStrokeColor(value);
             canvas.getActiveObjects().forEach((object) => {
                 //text types don't have stroke
-                if (typeof object.type === "string" && isTextType(object.type)) {
+                if (
+                    typeof object.type === "string" &&
+                    isTextType(object.type)
+                ) {
                     object.set({ fill: value });
                     return;
                 }
@@ -373,7 +409,7 @@ const buildEditor = ({
             //since we r not using gradient and patterns
             return value;
         },
-        
+
         getActiveFontLineThrough: () => {
             const selectedObject = selectedObjects[0];
             if (!selectedObject) {
@@ -382,7 +418,6 @@ const buildEditor = ({
             //@ts-ignore
             const value = selectedObject.get("linethrough") || "normal";
 
-            
             return value;
         },
 
@@ -394,7 +429,6 @@ const buildEditor = ({
             //@ts-ignore
             const value = selectedObject.get("underline") || "normal";
 
-            
             return value;
         },
 
@@ -406,10 +440,8 @@ const buildEditor = ({
             //@ts-ignore
             const value = selectedObject.get("textAlign") || "left";
 
-            
             return value;
         },
-
 
         getActiveFontSize: () => {
             const selectedObject = selectedObjects[0];
@@ -419,10 +451,8 @@ const buildEditor = ({
             //@ts-ignore
             const value = selectedObject.get("fontSize") || FONT_SIZE;
 
-            
             return value;
         },
-
 
         getActiveFontFamily: () => {
             const selectedObject = selectedObjects[0];
@@ -487,6 +517,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     const [strokeDashArray, setStrokeDashArray] =
         useState<number[]>(STROKE_DASH_ARRAY);
 
+    const { copy, paste } = useClipboard({ canvas });
     useAutoResize({ canvas, container });
 
     useCanvasEvents({
@@ -499,6 +530,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     const editor = useMemo(() => {
         if (canvas) {
             return buildEditor({
+                copy,
+                paste,
                 canvas,
                 fillColor,
                 setFillColor,
@@ -556,8 +589,6 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
                     blur: 5,
                 }),
             });
-
-            
 
             // const heighKamHai = initialContainer.offsetHeight < 800 ? 1200 : initialContainer.offsetHeight;
 
