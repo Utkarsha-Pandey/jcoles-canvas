@@ -2,6 +2,19 @@ import { fabric } from "fabric";
 import { ITextboxOptions } from "fabric/fabric-impl";
 import * as material from "material-colors";
 
+
+export const JSON_KEYS = [
+  "name",
+  "gradientAngle",
+  "selectable",
+  "hasControls",
+  "linkData",
+  "editable",
+  "extensionType",
+  "extension"
+];
+
+
 export const fonts = [
   "Arial",
   "Arial Black",
@@ -101,6 +114,12 @@ export type EditorHookProps = {
 };
 
 export type BuildEditorProps = {
+  undo : () => void;
+  redo: () => void;
+  save: (skip? : boolean) => void;
+  canUndo: () => boolean;
+  canRedo : () => boolean;
+
   copy : () => void;
   paste : () => void;
   canvas: fabric.Canvas;
