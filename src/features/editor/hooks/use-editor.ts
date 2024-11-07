@@ -29,6 +29,7 @@ const buildEditor = ({
     redo,
     canRedo,
     canUndo,
+    autoZoom,
     copy,
     paste,
     canvas,
@@ -60,6 +61,39 @@ const buildEditor = ({
         canvas.setActiveObject(object);
     };
     return {
+        autoZoom,
+        getWorkspace,
+        zoomIn: ()=>{
+            let zoomRatio = canvas.getZoom();
+            zoomRatio +=0.05;
+            const center=canvas.getCenter();
+            canvas.zoomToPoint(
+                new fabric.Point(center.left,center.top),
+                zoomRatio >1 ? 1 :zoomRatio,
+            )
+        }, 
+        zoomOut: ()=>{
+            let zoomRatio = canvas.getZoom();
+            zoomRatio -=0.05;
+            const center=canvas.getCenter();
+            canvas.zoomToPoint(
+                new fabric.Point(center.left,center.top),
+                zoomRatio <0.2 ? 0.2: zoomRatio,
+            )
+        },
+        changeSize: (value: {width:number;height:number })=>{
+           const workspace = getWorkspace();
+
+           workspace?.set(value);
+           autoZoom();
+           //TODO save
+        },
+        changeBackground: ( value:string  )=>{
+           const workspace = getWorkspace();
+           workspace?.set({fill:value});
+           canvas.renderAll();
+           //TODO save
+        },
         enableDrawingMode: () => {
             canvas.discardActiveObject();
             canvas.renderAll();
@@ -529,7 +563,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 
     const { save, canRedo, canUndo, undo, redo } = useHistory({ canvas });
     const { copy, paste } = useClipboard({ canvas });
-    useAutoResize({ canvas, container });
+    const {autoZoom}= useAutoResize({ canvas, container });
 
     useCanvasEvents({
         save,
@@ -547,6 +581,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
                 redo,
                 canRedo, 
                 canUndo,
+                autoZoom, 
                 copy,
                 paste,
                 canvas,
@@ -571,6 +606,9 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
         undo,
         redo,
         save,
+        copy,
+        paste,
+        autoZoom,
         copy,
         paste,
         canvas,
@@ -613,7 +651,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
                     blur: 5,
                 }),
             });
-
+ 
             // const heighKamHai = initialContainer.offsetHeight < 800 ? 1200 : initialContainer.offsetHeight;
 
             initialCanvas.setDimensions({

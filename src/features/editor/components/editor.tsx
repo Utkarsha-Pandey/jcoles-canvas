@@ -19,6 +19,7 @@ import { FontSidebar } from "./font-sidebar";
 import { ImageSidebar } from "./image-sidebar";
 import { FilterSidebar } from "./filter-sidebar";
 import { DrawSidebar } from "./draw-sidebar";
+import { SettingsSidebar } from "./settings-sidebar";
 
 export const Editor = () => {
     const [activeTool, setActiveTool] = useState<ActiveTool>("select");
@@ -130,6 +131,11 @@ export const Editor = () => {
                     activeTool={activeTool}
                     onChangeActiveTool={onChangeActiveTool}
                 />
+                <SettingsSidebar
+                    editor={editor}
+                    activeTool={activeTool}
+                    onChangeActiveTool={onChangeActiveTool}
+                />
 
                 <DrawSidebar
                     editor={editor}
@@ -150,7 +156,7 @@ export const Editor = () => {
                     >
                         <canvas ref={canvasRef} />
                     </div>
-                    <Footer />
+                    <Footer editor={editor}/>
                 </main>
             </div>
         </div>
