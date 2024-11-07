@@ -19,26 +19,26 @@ import {
 import { CiFileOn } from "react-icons/ci";
 import { Separator } from "@/components/ui/separator";
 import { BsCloudCheck } from "react-icons/bs";
-import { ActiveTool } from "@/features/types";
+import { ActiveTool, Editor } from "@/features/types";
 import { cn } from "@/lib/utils";
 
-
 interface NavbarProps {
-    activeTool: ActiveTool,
+    editor: Editor | undefined;
+    activeTool: ActiveTool;
     onChangeActiveTool: (tool: ActiveTool) => void;
-
-};
+}
 
 export const Navbar = ({
+    editor,
     activeTool,
     onChangeActiveTool,
-} : NavbarProps) => {
+}: NavbarProps) => {
     return (
         <nav className="w-full flex items-center p-4 h-[68px] gap-x-8 border-b lg:pl-[34px] bg-white justify-between">
             {/* Left Side - Logo and Main Controls */}
             <div className="flex items-center gap-x-4">
                 <Logo />
-                {/* <DropdownMenu modal={false}>
+                <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <Button>
                             File
@@ -59,32 +59,47 @@ export const Navbar = ({
                             </div>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
-                </DropdownMenu> */}
+                </DropdownMenu>
                 <Separator orientation="vertical" className="mx-2" />
                 <Hint label="Select" side="bottom" sideOffset={10}>
-                    <Button variant="ghost" size="icon" onClick={() => onChangeActiveTool("select")} className={cn(activeTool === "select" && "bg-gray-100")}>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onChangeActiveTool("select")}
+                        className={cn(activeTool === "select" && "bg-gray-100")}
+                    >
                         <MousePointerClick className="size-4" />
                     </Button>
                 </Hint>
                 <Hint label="Undo" side="bottom" sideOffset={10}>
-                    <Button variant="ghost" size="icon" onClick={() => {}}>
+                    <Button
+                        disabled={!editor?.canUndo()}
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => editor?.onUndo()}
+                    >
                         <Undo2 className="size-4" />
                     </Button>
                 </Hint>
                 <Hint label="Redo" side="bottom" sideOffset={10}>
-                    <Button variant="ghost" size="icon" onClick={() => {}}>
+                    <Button
+                        disabled={!editor?.canRedo()}
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => editor?.onRedo()}
+                    >
                         <Redo2 className="size-4" />
                     </Button>
                 </Hint>
                 <Separator orientation="vertical" className="mx-2" />
-                {/* <div className="flex items-center gap-x-2">
+                <div className="flex items-center gap-x-2">
                     <BsCloudCheck className="size-[20px] text-muted-foreground" />
                     <div className="text-xs text-muted-foreground">Saved</div>
-                </div> */}
+                </div>
             </div>
 
             {/* Right Side - Export Button */}
-            {/* <div className="flex items-center">
+            <div className="flex items-center">
                 <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <Button size="sm" variant="ghost">
@@ -143,7 +158,7 @@ export const Navbar = ({
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-            </div> */}
+            </div>
         </nav>
     );
 };

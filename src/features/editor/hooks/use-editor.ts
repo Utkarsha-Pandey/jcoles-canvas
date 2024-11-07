@@ -11,6 +11,7 @@ import {
     FONT_FAMILY,
     FONT_SIZE,
     FONT_WEIGHT,
+    JSON_KEYS,
     RECTANGLE_OPTIONS,
     STROKE_COLOR,
     STROKE_DASH_ARRAY,
@@ -61,38 +62,40 @@ const buildEditor = ({
         canvas.setActiveObject(object);
     };
     return {
+        canUndo,
+        canRedo,
         autoZoom,
         getWorkspace,
-        zoomIn: ()=>{
+        zoomIn: () => {
             let zoomRatio = canvas.getZoom();
-            zoomRatio +=0.05;
-            const center=canvas.getCenter();
+            zoomRatio += 0.05;
+            const center = canvas.getCenter();
             canvas.zoomToPoint(
-                new fabric.Point(center.left,center.top),
-                zoomRatio >1 ? 1 :zoomRatio,
-            )
-        }, 
-        zoomOut: ()=>{
-            let zoomRatio = canvas.getZoom();
-            zoomRatio -=0.05;
-            const center=canvas.getCenter();
-            canvas.zoomToPoint(
-                new fabric.Point(center.left,center.top),
-                zoomRatio <0.2 ? 0.2: zoomRatio,
-            )
+                new fabric.Point(center.left, center.top),
+                zoomRatio > 1 ? 1 : zoomRatio
+            );
         },
-        changeSize: (value: {width:number;height:number })=>{
-           const workspace = getWorkspace();
+        zoomOut: () => {
+            let zoomRatio = canvas.getZoom();
+            zoomRatio -= 0.05;
+            const center = canvas.getCenter();
+            canvas.zoomToPoint(
+                new fabric.Point(center.left, center.top),
+                zoomRatio < 0.2 ? 0.2 : zoomRatio
+            );
+        },
+        changeSize: (value: { width: number; height: number }) => {
+            const workspace = getWorkspace();
 
-           workspace?.set(value);
-           autoZoom();
-           //TODO save
+            workspace?.set(value);
+            autoZoom();
+            save();
         },
-        changeBackground: ( value:string  )=>{
-           const workspace = getWorkspace();
-           workspace?.set({fill:value});
-           canvas.renderAll();
-           //TODO save
+        changeBackground: (value: string) => {
+            const workspace = getWorkspace();
+            workspace?.set({ fill: value });
+            canvas.renderAll();
+            save();
         },
         enableDrawingMode: () => {
             canvas.discardActiveObject();
@@ -107,6 +110,8 @@ const buildEditor = ({
         },
         onCopy: () => copy(),
         onPaste: () => paste(),
+        onUndo: () => undo(),
+        onRedo: () => redo(),
 
         changeImageFilter: (value: string) => {
             const objects = canvas.getActiveObjects();
@@ -561,9 +566,17 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     const [strokeDashArray, setStrokeDashArray] =
         useState<number[]>(STROKE_DASH_ARRAY);
 
-    const { save, canRedo, canUndo, undo, redo } = useHistory({ canvas });
+    const {
+        save,
+        canRedo,
+        canUndo,
+        undo,
+        redo,
+        canvasHistory,
+        setHistoryIndex,
+    } = useHistory({ canvas });
     const { copy, paste } = useClipboard({ canvas });
-    const {autoZoom}= useAutoResize({ canvas, container });
+    const { autoZoom } = useAutoResize({ canvas, container });
 
     useCanvasEvents({
         save,
@@ -576,12 +589,12 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     const editor = useMemo(() => {
         if (canvas) {
             return buildEditor({
-                save, 
-                undo, 
+                save,
+                undo,
                 redo,
-                canRedo, 
+                canRedo,
                 canUndo,
-                autoZoom, 
+                autoZoom,
                 copy,
                 paste,
                 canvas,
@@ -651,7 +664,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
                     blur: 5,
                 }),
             });
- 
+
             // const heighKamHai = initialContainer.offsetHeight < 800 ? 1200 : initialContainer.offsetHeight;
 
             initialCanvas.setDimensions({
@@ -665,8 +678,12 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 
             setCanvas(initialCanvas);
             setContainer(initialContainer);
+
+            const currState = JSON.stringify(initialCanvas.toJSON(JSON_KEYS));
+            canvasHistory.current = [currState];
+            setHistoryIndex(0);
         },
-        []
+        [canvasHistory, setHistoryIndex]
     );
 
     return { init, editor };
