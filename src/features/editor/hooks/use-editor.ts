@@ -20,7 +20,7 @@ import {
     TRIANGLE_OPTIONS,
 } from "@/features/types";
 import { useCanvasEvents } from "./use-canvas-events";
-import { createFilter, isTextType } from "../utils";
+import { createFilter, downloadFile, isTextType } from "../utils";
 import { useClipboard } from "./use-clipboard";
 import { useHistory } from "./use-history";
 
@@ -46,6 +46,47 @@ const buildEditor = ({
     strokeDashArray,
     setStrokeDashArray,
 }: BuildEditorProps): Editor => {
+    const generateSaveOptions = () => {
+        const { width, height, left, top } = getWorkspace() as fabric.Rect;
+
+        return {
+            name: "Image",
+            format: "png",
+            quality: 1,
+            width,
+            height,
+            left,
+            top,
+        };
+    };
+
+    const savePng = () => {
+        const options = generateSaveOptions();
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        const dataUrl = canvas.toDataURL(options);
+
+        downloadFile(dataUrl, "png");
+        autoZoom();
+    };
+
+    const saveSvg = () => {
+        const options = generateSaveOptions();
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        const dataUrl = canvas.toDataURL(options);
+
+        downloadFile(dataUrl, "svg");
+        autoZoom();
+    };
+
+    const saveJpg = () => {
+        const options = generateSaveOptions();
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        const dataUrl = canvas.toDataURL(options);
+
+        downloadFile(dataUrl, "jpg");
+        autoZoom();
+    };
+
     const getWorkspace = () => {
         return canvas.getObjects().find((object) => object.name === "clip");
     };
@@ -62,6 +103,9 @@ const buildEditor = ({
         canvas.setActiveObject(object);
     };
     return {
+        saveJpg,
+        savePng,
+        saveSvg,
         canUndo,
         canRedo,
         autoZoom,

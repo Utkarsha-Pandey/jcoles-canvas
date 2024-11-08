@@ -1,14 +1,10 @@
-"use client";
-import { Button } from "@/components/ui/button"
 
-export default function Home() {
-  return(
-    <div>
-      
-      <Button onClick={() => {alert("Welcome to JCOLESCANVAS")}}>
-        JColesCanvas
-      </Button>
-      
-    </div>
-  )
+import { auth } from "@/auth";
+
+export default async function Home() {
+    const session = await auth();
+
+    return <div>
+      {JSON.stringify(session)}
+    </div>;
 }
