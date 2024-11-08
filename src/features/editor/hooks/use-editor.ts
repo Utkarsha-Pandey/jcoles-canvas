@@ -21,9 +21,15 @@ import {
 import { useCanvasEvents } from "./use-canvas-events";
 import { createFilter, isTextType } from "../utils";
 import { useClipboard } from "./use-clipboard";
+import { useHistory } from "./use-history";
 import { useHotkeys } from "./use-hotkeys";
 
 const buildEditor = ({
+    save,
+    undo,
+    redo,
+    canRedo,
+    canUndo,
     autoZoom,
     copy,
     paste,
@@ -89,7 +95,7 @@ const buildEditor = ({
            canvas.renderAll();
            //TODO save
         },
-        enableDrawingMode : () => {
+        enableDrawingMode: () => {
             canvas.discardActiveObject();
             canvas.renderAll();
             canvas.isDrawingMode = true;
@@ -97,7 +103,7 @@ const buildEditor = ({
             canvas.freeDrawingBrush.color = strokeColor;
         },
 
-        disableDrawingMode : () => {
+        disableDrawingMode: () => {
             canvas.isDrawingMode = false;
         },
         onCopy: () => copy(),
@@ -300,8 +306,10 @@ const buildEditor = ({
                     return;
                 }
                 object.set({ stroke: value });
-                canvas.renderAll();
             });
+            canvas.freeDrawingBrush.color = value;
+
+            canvas.renderAll();
         },
 
         changeStrokeWidth: (value: number) => {
@@ -309,6 +317,8 @@ const buildEditor = ({
             canvas.getActiveObjects().forEach((object) => {
                 object.set({ strokeWidth: value });
             });
+            canvas.freeDrawingBrush.width = value;
+
             canvas.renderAll();
         },
 
@@ -552,10 +562,12 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     const [strokeDashArray, setStrokeDashArray] =
         useState<number[]>(STROKE_DASH_ARRAY);
 
+    const { save, canRedo, canUndo, undo, redo } = useHistory({ canvas });
     const { copy, paste } = useClipboard({ canvas });
     const {autoZoom}= useAutoResize({ canvas, container });
 
     useCanvasEvents({
+        save,
         canvas,
         container,
         setSelectedObjects,
@@ -574,6 +586,11 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     const editor = useMemo(() => {
         if (canvas) {
             return buildEditor({
+                save, 
+                undo, 
+                redo,
+                canRedo, 
+                canUndo,
                 autoZoom, 
                 copy,
                 paste,
@@ -594,6 +611,13 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 
         return undefined;
     }, [
+        canRedo,
+        canUndo,
+        undo,
+        redo,
+        save,
+        copy,
+        paste,
         autoZoom,
         copy,
         paste,
