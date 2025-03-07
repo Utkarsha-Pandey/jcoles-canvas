@@ -11,5 +11,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     accountsTable: accounts,
     
   }),
-  providers: [GitHub, Google]
+  providers: [GitHub, Google],
+  pages: {
+    signIn: "/sign-in",
+    error: "/sign-in",
+  }
 });
