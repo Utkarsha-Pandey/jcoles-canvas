@@ -13,7 +13,9 @@
     "db:studio": "bunx drizzle-kit studio"
   },
   "dependencies": {
+    "@auth/core": "^0.38.0",
     "@auth/drizzle-adapter": "^1.8.0",
+    "@hono/auth-js": "^1.0.15",
     "@hono/zod-validator": "^0.4.1",
     "@neondatabase/serverless": "^0.10.3",
     "@radix-ui/number": "^1.1.0",
