@@ -1,6 +1,8 @@
 "use client";
 
-import {signIn} from "next-auth/react";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useSignUp } from "../hooks/use-sign-up";
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -13,11 +15,38 @@ import Link from "next/link"
 import { FaGithub } from "react-icons/fa"
 import { FaGoogle } from "react-icons/fa6"
 
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 
+import { useSearchParams } from "next/navigation";
+import { TriangleAlert } from "lucide-react"; 
 
 export const SignUpCard = () => {
-    const onProviderSignUp = (provider : "github" | "google") => {
-        signIn(provider , {callbackUrl : "/"});
+    const mutation = useSignUp();
+
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const onCredentialsSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        mutation.mutate({
+            name,
+            email,
+            password
+        }, {
+            onSuccess: () => {
+                signIn("credentials" , {
+                    email,
+                    password,
+                    callbackUrl: "/",
+                })
+            }
+        })
+    }
+
+    const onProviderSignUp = (provider: "github" | "google") => {
+        signIn(provider, { callbackUrl: "/" });
     }
 
     return (
@@ -32,23 +61,62 @@ export const SignUpCard = () => {
                 </CardDescription>
             </CardHeader>
 
+            {!!mutation.error && (
+                <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+                    <TriangleAlert className="size-4"/>
+                </div>
+            )}
 
             <CardContent className="space-y-5 px-0 pb-0">
+                <form onSubmit={onCredentialsSignUp} className="space-y-2.5">
+                    <Input
+                        disabled={mutation.isPending}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Name"
+                        type="text"
+                        required />
+                    <Input
+                        disabled={mutation.isPending}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email"
+                        type="email"
+                        required />
+                    <Input
+                        disabled={mutation.isPending}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password"
+                        type="password"
+                        required
+                        minLength={3}
+                        maxLength={20}
+                    />
+                    <Button
+                        disabled={mutation.isPending}
+                        type="submit" className="w-full" size="lg">
+                        Continue
+                    </Button>
+                </form>
+                <Separator />
                 <div className="flex flex-col gap-y-2.5">
 
                     <Button
-                    onClick={() => onProviderSignUp("github")}
-                    variant="outline"
-                    size="lg"
-                    className="w-full relative">
+                        disabled={mutation.isPending}
+                        onClick={() => onProviderSignUp("github")}
+                        variant="outline"
+                        size="lg"
+                        className="w-full relative">
                         <FaGithub />
                         Continue with Github
                     </Button>
                     <Button
-                    onClick={() => onProviderSignUp("google")}
-                    variant="outline"
-                    size="lg"
-                    className="w-full relative">
+                        disabled={mutation.isPending}
+                        onClick={() => onProviderSignUp("google")}
+                        variant="outline"
+                        size="lg"
+                        className="w-full relative">
                         <FaGoogle />
                         Continue with Google
                     </Button>
