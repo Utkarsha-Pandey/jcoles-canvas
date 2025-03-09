@@ -21,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { BsCloudCheck } from "react-icons/bs";
 import { ActiveTool, Editor } from "@/features/types";
 import { cn } from "@/lib/utils";
+import { UserButton } from "@/features/auth/components/user-button";
 
 interface NavbarProps {
     editor: Editor | undefined;
@@ -147,6 +148,8 @@ export const Navbar = ({
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+
+                <UserButton />
             </div>
         </nav>
     );
