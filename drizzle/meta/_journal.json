@@ -15,6 +15,13 @@
       "when": 1741428936906,
       "tag": "0001_glamorous_falcon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1741606165632,
+      "tag": "0002_aberrant_skaar",
+      "breakpoints": true
     }
   ]
 }

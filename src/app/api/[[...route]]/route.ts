@@ -7,6 +7,7 @@ import test from "./test"
 import { AuthConfig, initAuthConfig } from "@hono/auth-js";
 import authConfig from "@/auth.config";
 import { Context } from "hono";
+import projects from "./projects";
 
 export const runtime = "nodejs";
 
@@ -33,6 +34,7 @@ const routes = app
     .route("/test" , test)
     .route("/images", images)
     .route("/users" , users)
+    .route("/projects",projects);
 
 //const routes = app.route("/user" , user).route("/profile" , profile); ==>>> for adding more routes.
 
