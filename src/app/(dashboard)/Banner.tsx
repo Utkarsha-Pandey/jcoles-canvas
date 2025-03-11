@@ -3,11 +3,13 @@
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Sparkles } from "lucide-react"
 
-import { useGenerateProject } from "@/features/projects/api/use-create-project";
-import { useRouter } from "next/router";
+
+import { useCreateProject } from "@/features/projects/api/use-create-project";
+// import { useCreateProject } from "@/features/projects/api/use-create-project";
+import { useRouter } from "next/navigation";
 export const Banner = ()=>{
     const router = useRouter();
-    const mutation = useGenerateProject();
+    const mutation = useCreateProject();
 
     const onClick = () =>{
         mutation.mutate(
@@ -39,6 +41,7 @@ export const Banner = ()=>{
                     Turn inspiration into design in no time.
                 </p>
                 <Button
+                
                 disabled={mutation.isPending}
                 onClick={onClick}
                 variant="secondary"
