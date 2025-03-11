@@ -12,28 +12,45 @@ import { Hint } from "@/components/hint";
 import {
     ChevronDown,
     Download,
+    Loader,
     MousePointerClick,
     Redo2,
     Undo2,
 } from "lucide-react";
 import { CiFileOn } from "react-icons/ci";
 import { Separator } from "@/components/ui/separator";
-import { BsCloudCheck } from "react-icons/bs";
+import { BsCloudCheck, BsCloudSlash } from "react-icons/bs";
 import { ActiveTool, Editor } from "@/features/types";
 import { cn } from "@/lib/utils";
 import { UserButton } from "@/features/auth/components/user-button";
+import { useMutationState } from "@tanstack/react-query";
 
 interface NavbarProps {
+    id: string;
     editor: Editor | undefined;
     activeTool: ActiveTool;
     onChangeActiveTool: (tool: ActiveTool) => void;
 }
 
 export const Navbar = ({
+    id,
     editor,
     activeTool,
     onChangeActiveTool,
 }: NavbarProps) => {
+    const data = useMutationState({
+        filters: {
+            mutationKey: ["project", { id }],
+            exact: true,
+        },
+        select: (mutation) => mutation.state.status,
+    });
+
+    const currentStatus = data[data.length - 1];
+
+    const isError = currentStatus === "error";
+    const isPending = currentStatus === "pending";
+
     return (
         <nav className="w-full flex items-center p-4 h-[68px] gap-x-8 border-b lg:pl-[34px] bg-white justify-between">
             {/* Left Side - Logo and Main Controls */}
@@ -49,7 +66,7 @@ export const Navbar = ({
                     <DropdownMenuContent align="start" className="min-w-60">
                         <DropdownMenuItem
                             className="flex items-center gap-x-2"
-                            onClick={() => {}}
+                            onClick={() => { }}
                         >
                             <CiFileOn className="size-8" />
                             <div>
@@ -93,10 +110,27 @@ export const Navbar = ({
                     </Button>
                 </Hint>
                 <Separator orientation="vertical" className="mx-2" />
-                <div className="flex items-center gap-x-2">
-                    <BsCloudCheck className="size-[20px] text-muted-foreground" />
-                    <div className="text-xs text-muted-foreground">Saved</div>
-                </div>
+
+                {!isPending && !isError && (
+                    <div className="flex items-center gap-x-2">
+                        <BsCloudCheck className="size-[20px] text-muted-foreground" />
+                        <div className="text-xs text-muted-foreground">Saved</div>
+                    </div>
+                )}
+
+                {!isPending && isError && (
+                    <div className="flex items-center gap-x-2">
+                        <BsCloudSlash className="size-[20px] text-muted-foreground" />
+                        <div className="text-xs text-muted-foreground">Failed to Save</div>
+                    </div>
+                )}
+
+                {isPending && (
+                    <div className="flex items-center gap-x-2">
+                        <Loader className="size-4 animate-spin text-muted-foreground" />
+                        <div className="text-xs text-muted-foreground">Saving...</div>
+                    </div>
+                )}
             </div>
 
             {/* Right Side - Export Button */}
@@ -109,7 +143,7 @@ export const Navbar = ({
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="min-w-60">
-                        
+
                         <DropdownMenuItem
                             className="flex items-center gap-x-2"
                             onClick={() => editor?.savePng()}

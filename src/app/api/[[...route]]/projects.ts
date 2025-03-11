@@ -5,8 +5,52 @@ import { projects, projectsInsertSchema } from "@/db/schema";
 import { db } from "@/db/drizzle";
 import { z } from "zod";
 import { eq, and } from "drizzle-orm";
+import { error } from "console";
 
 const app = new Hono()
+  .patch(
+    "/:id",
+    verifyAuth(),
+    zValidator("param", z.object({ id: z.string() })),
+    zValidator(
+      "json",
+      projectsInsertSchema
+        .omit({
+          id: true,
+          userId: true,
+          createdAt: true,
+          updatedAt: true,
+        })
+        .partial()
+    ),
+    async (c) => {
+      // return c.json({error : true} , 400)
+      const auth = c.get("authUser");
+      const { id } = c.req.valid("param");
+      const values = c.req.valid("json");
+
+      if (!auth.token?.id) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      const data = await db
+        .update(projects)
+        .set({
+          ...values,
+          updatedAt: new Date(),
+        })
+        .where(
+          and(eq(projects.id , id) , eq(projects.userId , auth.token.id)),
+        )
+        .returning();
+
+        if(data.length === 0){
+          return c.json({error: "Unauthorized"} , 401);
+        }
+
+        return c.json({data : data[0]});
+    }
+  )
   .get(
     "/:id",
     verifyAuth(),
