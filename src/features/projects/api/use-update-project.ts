@@ -28,6 +28,7 @@ export const useUpdateProject = (id : string) => {
         },
 
         onSuccess: () => {
+            queryClient.invalidateQueries({queryKey : ["project"]}); 
             queryClient.invalidateQueries({queryKey : ["project" , {id}]}); 
         },
         onError: () => {
