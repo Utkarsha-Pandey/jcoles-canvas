@@ -108,7 +108,15 @@ export type ActiveTool =
     | "templates";
 
 export type EditorHookProps = {
+    defaultState?: string;
+    defaultWidth?: number;
+    defaultHeight?: number;
     clearSelectionCallback?: () => void;
+    saveCallback?: (values : {
+        json: string;
+        height: number;
+        width: number;
+    }) => void;
 };
 
 export type BuildEditorProps = {
