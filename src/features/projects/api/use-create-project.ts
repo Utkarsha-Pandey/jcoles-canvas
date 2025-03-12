@@ -26,7 +26,7 @@ export const useCreateProject = () => {
 
         onSuccess: () => {
             toast.success("User successfully registered");
-            queryClient.invalidateQueries({queryKey: ["projects"]})
+            queryClient.invalidateQueries({queryKey: ["project"]})
         },
         
         onError: () => {

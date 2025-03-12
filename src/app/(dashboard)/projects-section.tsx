@@ -8,12 +8,17 @@ import {formatDistanceToNow} from "date-fns";
 import { DropdownMenu , DropdownMenuContent , DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useDuplicateProject } from "@/features/projects/api/use-duplicate-project";
+import { useDeleteProject } from "@/features/projects/use-delete-project";
 
 export const ProjectsSection = () => {
     const duplicateMutation = useDuplicateProject();
+    const removeMutation = useDeleteProject();
     const router = useRouter();
     const onCopy = (id: string) =>{
         duplicateMutation.mutate({id});
+    };
+    const onDelete = (id: string) =>{
+        removeMutation.mutate({id});
     };
     const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetProjects();
 
@@ -105,7 +110,7 @@ export const ProjectsSection = () => {
                                                         Make a Copy
                                                     </DropdownMenuItem>
 
-                                                    <DropdownMenuItem className="h-10 cursor-pointer" disabled={false} onClick={() => {}}>
+                                                    <DropdownMenuItem className="h-10 cursor-pointer" disabled={removeMutation.isPending} onClick={() => onDelete(project.id)}>
                                                         <TrashIcon className="size-4 mr-2"/>
                                                         Delete
                                                     </DropdownMenuItem>
