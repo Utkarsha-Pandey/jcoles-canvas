@@ -9,8 +9,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "@/components/ui/button";
 import { useDuplicateProject } from "@/features/projects/api/use-duplicate-project";
 import { useDeleteProject } from "@/features/projects/api/use-delete-project";
+import { useConfirm } from "@/hooks/use-confirm";
 
 export const ProjectsSection = () => {
+
+    const [ConfirmDialog , confirm] = useConfirm(
+        "Are you sure?" ,
+        "You are about to delete this project."
+    )
     const duplicateMutation = useDuplicateProject();
     const removeMutation = useDeleteProject();
     const router = useRouter();
@@ -19,8 +25,12 @@ export const ProjectsSection = () => {
         duplicateMutation.mutate({ id });
     };
 
-    const onDelete = (id: string) => {
-        removeMutation.mutate({ id });
+    const onDelete = async (id: string) => {
+        const ok = await confirm();
+        if(ok){
+            removeMutation.mutate({ id });
+
+        }
     };
 
     const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetProjects();
@@ -62,6 +72,7 @@ export const ProjectsSection = () => {
 
     return (
         <div className="space-y-4">
+            <ConfirmDialog />
             <h3 className="font-semibold text-lg">Recent Projects</h3>
             <Table>
                 <TableBody>
@@ -108,7 +119,6 @@ export const ProjectsSection = () => {
                                                         <CopyIcon className="size-4 mr-2" />
                                                         Make a Copy
                                                     </DropdownMenuItem>
-
                                                     <DropdownMenuItem
                                                         className="h-10 cursor-pointer"
                                                         disabled={removeMutation.isPending}
