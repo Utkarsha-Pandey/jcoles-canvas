@@ -21,12 +21,12 @@ export const Sidebar = ({ activeTool, onChangeActiveTool }: SidebarProps) => {
     return (
         <aside className="bg-white flex flex-col w-[100px] h-full vorder-r overflow-y-auto">
             <ul className="flex flex-col">
-                {/* <SidebarItem
+                <SidebarItem
                     icon={LayoutTemplate}
-                    label="Design"
+                    label="Templates"
                     isActive={activeTool === "templates"}
                     onClick={() => onChangeActiveTool("templates")}
-                /> */}
+                />
                 <SidebarItem
                     icon={Pencil}
                     label="Draw"

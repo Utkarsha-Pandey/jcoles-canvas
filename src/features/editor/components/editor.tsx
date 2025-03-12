@@ -17,6 +17,8 @@ import { OpacitySidebar } from "./opacity-sidebar";
 import { TextSidebar } from "./text-sidebar";
 import { FontSidebar } from "./font-sidebar";
 import { ImageSidebar } from "./image-sidebar";
+import { TemplateSidebar } from "./template-sidebar";
+
 import { FilterSidebar } from "./filter-sidebar";
 import { DrawSidebar } from "./draw-sidebar";
 import { SettingsSidebar } from "./settings-sidebar";
@@ -148,6 +150,12 @@ export const Editor = ({ initialData }: EditorProps) => {
                 />
 
                 <ImageSidebar
+                    editor={editor}
+                    activeTool={activeTool}
+                    onChangeActiveTool={onChangeActiveTool}
+                />
+
+                <TemplateSidebar
                     editor={editor}
                     activeTool={activeTool}
                     onChangeActiveTool={onChangeActiveTool}
