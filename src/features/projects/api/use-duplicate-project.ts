@@ -18,7 +18,7 @@ export const useDuplicateProject = () => {
         RequestType
     >({
         mutationFn: async (param) => {
-            const response = await client.api.projects[":id"].duplicate.$post({ param, });
+            const response = await client.api.projects[":id"].duplicate.$post({ param });
 
             if(!response.ok){
                 throw new Error("Failed to duplicate project");
@@ -27,7 +27,7 @@ export const useDuplicateProject = () => {
         },
 
         onSuccess: () => {
-            queryClient.invalidateQueries({queryKey : ["projects"]}); 
+            queryClient.invalidateQueries({queryKey : ["project"]}); 
         },
         onError: () => {
           toast.error("Failed to duplicate project");
