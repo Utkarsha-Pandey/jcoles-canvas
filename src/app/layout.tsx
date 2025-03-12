@@ -6,6 +6,7 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth"
 
 import { Toaster } from "@/components/ui/sonner";
+import { Modals } from "@/components/modals";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -39,6 +40,7 @@ export default async function RootLayout({
                 >
                     <Providers>
                         <Toaster />
+                        <Modals/>
                         {children}</Providers>
                 </body>
             </html>
