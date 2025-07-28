@@ -1,56 +1,56 @@
 "use client";
 
-import { Button } from "@/components/ui/button"
-import { ArrowRight, Sparkles } from "lucide-react"
-
-
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { useCreateProject } from "@/features/projects/api/use-create-project";
-// import { useCreateProject } from "@/features/projects/api/use-create-project";
 import { useRouter } from "next/navigation";
-export const Banner = ()=>{
-    const router = useRouter();
-    const mutation = useCreateProject();
 
-    const onClick = () =>{
-        mutation.mutate(
-          {
-            name:"Untitled project",
-            json:"",
-            width:900,
-            height:1200,
-          },
-          {
-            onSuccess: ({data}) =>{
-               router.push(`/editor/${data.id}`); 
-            },
-          }, 
-        );
-    }; 
-    return (
-        <div className=" text-white aspect-[5/1] min-h-[248px] flex gap-x-6 p-6 items-center rounded-xl bg-gradient-to-r from-[#2e62cb] via-[#0073ff] to-[#3faff5]">
-            <div className="rounded-full size-28 flex items-center justify-center bg-white/50 ">
-            <div className="rounded-full size-20 flex items-center justify-center bg-white hidden md:flex">
-                <Sparkles className="h-20 text-[#0073ff] fill-[#0073ff]"/>
-            </div>
-            </div>
-            <div className="flex flex-col gap-y-2">
-                <h1 className="text-xl md:text-3xl font-semibold">
-                  Visualize your ideas with JColes Canvas Editor
-                </h1>
-                <p className="text-xs md:text-sm mb-2">
-                    Turn inspiration into design in no time.
-                </p>
-                <Button
-                
-                disabled={mutation.isPending}
-                onClick={onClick}
-                variant="secondary"
-                className="w-[160px]"
-                >
-                 Start creating
-                 <ArrowRight className="size-4 ml-2"/>
-                </Button>
-            </div>
-        </div>
-    )
-}
+export const Banner = () => {
+  const router = useRouter();
+  const mutation = useCreateProject();
+
+  const onClick = () => {
+    mutation.mutate(
+      {
+        name: "Untitled project",
+        json: "",
+        width: 900,
+        height: 1200,
+      },
+      {
+        onSuccess: ({ data }) => {
+          router.push(`/editor/${data.id}`);
+        },
+      }
+    );
+  };
+
+  return (
+    <section
+      className="relative h-[70vh] w-full bg-cover bg-center bg-no-repeat overflow-hidden flex items-center justify-center px-6"
+      style={{ backgroundImage: "url('/banner-bg.jpg')" }} 
+    >
+      {}
+      <div className="absolute inset-0 bg-black/50 z-0" />
+
+      {}
+      <div className="z-10 max-w-2xl text-center text-white space-y-6">
+        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
+          Design Beyond Limits
+        </h1>
+        <p className="text-lg md:text-xl text-white/90">
+          Bring your creative ideas to life with JColes Canvas.
+        </p>
+        <Button
+          disabled={mutation.isPending}
+          onClick={onClick}
+          size="lg"
+          className="text-lg px-8 py-6 font-semibold bg-white text-[#0073ff] hover:bg-gray-100 transition"
+        >
+          Start Creating
+          <ArrowRight className="ml-3 w-5 h-5" />
+        </Button>
+      </div>
+    </section>
+  );
+};
